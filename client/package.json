@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^9.13.0",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.3.4",
     "pinia": "^2.0.33",
@@ -17,6 +18,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@vicons/ionicons5": "^0.12.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "naive-ui": "^2.34.3",
     "typescript": "^4.9.3",
