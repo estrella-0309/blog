@@ -46,11 +46,14 @@
 
         </div>
         <div class="search">
-          <n-input round placeholder="搜索">
+          <i class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></i>
+          <n-input round placeholder="搜索" ref="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
+            v-show="!taggleSearchAndIcon" style=" transition: .5s;">
             <template #suffix>
               <i class="iconfont icon-sousuo"></i>
             </template>
           </n-input>
+
         </div>
       </div>
 
@@ -59,13 +62,16 @@
 </template>
 
 <script setup lang='ts'>
-import { defineComponent, reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+
+//主题
 let theme = ref('lighting')
 const changetheme = () => {
   if (theme.value === 'lighting') theme.value = 'dark'
   else theme.value = 'lighting'
 }
 
+//下拉菜单
 let dropDown = ref(false)
 const ShowMenu = () => {
   dropDown.value = true
@@ -73,6 +79,18 @@ const ShowMenu = () => {
 const closedropDown = () => {
   dropDown.value = false;
 };
+
+//搜索模块
+const searchText = ref("");
+const taggleSearchAndIcon = ref(true)
+const ChangeSeachToIcon = () => {
+  taggleSearchAndIcon.value = true
+
+}
+const ChangeIconToSearch = () => {
+  taggleSearchAndIcon.value = false
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -153,6 +171,10 @@ const closedropDown = () => {
 
     .search {
       order: -1;
+
+      &>i {
+        margin-right: var(--mb-1);
+      }
     }
   }
 }
