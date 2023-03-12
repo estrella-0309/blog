@@ -3,10 +3,11 @@
 </template>
 
 <script setup lang="ts">
-
+import 'animate.css';
 </script>
 
 <style>
+
 * {
   padding: 0;
   margin: 0;

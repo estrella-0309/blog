@@ -1,7 +1,7 @@
 <template>
   <header class="header scroll-header" id="header">
     <nav class="nav container">
-      <div style="display:flex;">
+      <div class="nav__left">
         <a href="#" class="nav__logo">Estrella's Blog</a>
 
         <div class="nav__menu" id="nav-menu" :class="dropDown ? 'show-menu' : ' '">
@@ -38,6 +38,7 @@
       </div>
 
       <div class="nav__btns">
+        <a href="#" class="nav__logo">Estrella's Blog</a>
         <i class="iconfont change-theme" :class="theme === 'lighting' ? ' icon-dark' : 'icon-light'" id="nav-close"
           @click="changetheme()"></i>
 
@@ -45,15 +46,17 @@
           <i class="iconfont icon-jiugongge"></i>
 
         </div>
-        <div class="search">
+        <div class="search" style="width:40%">
+
           <i class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></i>
-          <n-input round placeholder="搜索" ref="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
-            v-show="!taggleSearchAndIcon" style=" transition: .5s;">
+          <n-input round placeholder="搜索" id="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
+            v-show="!taggleSearchAndIcon">
             <template #suffix>
               <i class="iconfont icon-sousuo"></i>
             </template>
           </n-input>
-
+          <!-- <input type="text" placeholder="搜索" id="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
+            v-show="!taggleSearchAndIcon"> -->
         </div>
       </div>
 
@@ -62,13 +65,19 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, nextTick } from 'vue'
 
 //主题
 let theme = ref('lighting')
 const changetheme = () => {
-  if (theme.value === 'lighting') theme.value = 'dark'
-  else theme.value = 'lighting'
+  if (theme.value === 'lighting') {
+    theme.value = 'dark'
+    document.getElementsByTagName("body")[0].className = "dark-theme";
+  }
+  else {
+    theme.value = 'lighting'
+    document.getElementsByTagName("body")[0].className = "";
+  }
 }
 
 //下拉菜单
@@ -83,13 +92,24 @@ const closedropDown = () => {
 //搜索模块
 const searchText = ref("");
 const taggleSearchAndIcon = ref(true)
+const searchInput = ref(null)
 const ChangeSeachToIcon = () => {
   taggleSearchAndIcon.value = true
 
 }
+
 const ChangeIconToSearch = () => {
   taggleSearchAndIcon.value = false
+  let inputbox = document.getElementById("searchInput")
+  nextTick(() => {
+    let input = inputbox?.querySelector("input") as HTMLElement
+
+    input.focus()
+  })
 }
+
+
+
 
 </script>
 
@@ -104,6 +124,7 @@ const ChangeIconToSearch = () => {
 }
 
 
+
 .nav {
   width: 100%;
   height: var(--header-height);
@@ -112,23 +133,30 @@ const ChangeIconToSearch = () => {
   .nav__logo {
     color: var(--first-color);
     font-size: var(--big-font-size);
-    margin-left: var(--mb-5);
+    // margin-left: var(--mb-5);
   }
 
   .nav__btns {
-    width: 100%;
+    margin-right: var(--mb-2);
     height: 100%;
     display: flex;
     align-items: center;
-    font-size: 1.25rem;
+    // font-size: 1.25rem;
 
     .change-theme {
       color: var(--title-color);
       margin-right: var(--mb-1);
       cursor: pointer;
+    }
 
-      &:hover {
-        color: var(--first-color);
+    .search {
+      order: -1;
+      display: flex;
+      justify-content: flex-end;
+      color: var(--title-color);
+
+      &>i {
+        margin-right: var(--mb-1);
       }
     }
 
@@ -136,6 +164,7 @@ const ChangeIconToSearch = () => {
       cursor: pointer;
       margin-right: var(--mb-1);
       font-weight: var(--font-medium);
+      color: var(--title-color);
 
       &:hover {
         color: var(--first-color);
@@ -149,7 +178,7 @@ const ChangeIconToSearch = () => {
   gap: 1.5rem;
 }
 
-@media screen and (max-width:767px) {
+@media screen and (max-width:725px) {
   .nav__menu {
     position: fixed;
     top: -100%;
@@ -162,20 +191,27 @@ const ChangeIconToSearch = () => {
     transition: .5s;
   }
 
-  .nav__logo {
-    display: none;
+  .nav {
+
+    .nav__logo {
+      display: none;
+    }
   }
+
 
   .nav__btns {
     justify-content: flex-end;
+    margin-right: var(--mb-2);
 
-    .search {
+    .nav__logo {
+      display: block;
       order: -1;
-
-      &>i {
-        margin-right: var(--mb-1);
-      }
+      font-size: var(--h3-font-size);
+      margin-left: 10px;
+      margin-right: auto;
     }
+
+
   }
 }
 
@@ -218,10 +254,21 @@ const ChangeIconToSearch = () => {
 }
 
 .show-menu {
-  top: var(--header-height);
+  top: 0;
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 370px) {
+
+  .nav {
+
+    .nav__btns {
+      .nav__logo {
+        font-size: var(--small-font-size);
+      }
+    }
+  }
+
+
   .nav__menu {
     padding: 2rem .25rem 4rem;
   }
@@ -231,29 +278,62 @@ const ChangeIconToSearch = () => {
   }
 }
 
+
+
 @media screen and (min-width: 568px) {
   .nav {
-    background-color: red;
 
     .nav__logo {
       font-size: var(--h3-font-size);
+
     }
 
-    .nav__link {
-      p {
-        margin-left: var(--mb-0-25);
+    .nav__menu {
+      height: 100%;
+      width: 400px;
+
+      .nav__list {
+        height: 100%;
+        gap: 0;
+        column-gap: 0 !important;
+
+        .nav__item {
+          height: 100%;
+          width: 100px;
+          border: 1px solid var(--body-color);
+          margin: auto 0;
+        }
+
+        .nav__link {
+          vertical-align: center;
+        }
       }
     }
+
+
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 725px) {
     .nav {
-      background-color: pink;
+      .nav__left {
+        display: flex;
+        flex: 5;
+        justify-content: space-between;
+        height: 100%;
 
-      .nav__logo {
-        font-size: var(--h1-font-size);
+        .nav__logo {
+          margin-left: var(--mb-3);
+          font-size: var(--h1-font-size);
+        }
       }
 
+
+
+      .nav__btns {
+        .nav__logo {
+          display: none
+        }
+      }
 
     }
 
@@ -269,8 +349,6 @@ const ChangeIconToSearch = () => {
 
 
     .header {
-      padding: 0 1rem;
-
       .nav {
         height: calc(var(--header-height) + 1.5rem);
         column-gap: 1rem;
@@ -282,17 +360,38 @@ const ChangeIconToSearch = () => {
 
         .nav__list {
           display: flex;
-          column-gap: 2rem;
 
           .nav__link {
-            flex-direction: row;
-
+            // flex-direction: row;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
           }
         }
       }
     }
+  }
+}
 
+@media screen and (max-width: 310px) {
+  .nav {
 
+    .nav__btns {
+      margin-right: 0;
+
+      .iconfont {
+        font-size: var(--smaller-font-size);
+      }
+
+      .nav__logo {
+        font-size: var(--smaller-font-size);
+      }
+
+      .nav__toggle {
+        // height: 100%;
+
+      }
+    }
   }
 }
 </style>

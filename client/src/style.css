@@ -16,7 +16,7 @@
   --text-color: #6d6a7c;
   --text-color-light: hsl(var(--hue-color), 8%, 65%);
   --input-color: hsl(var(--hue-color), 70%, 96%);
-  --nav-color:#fff;
+  --nav-color: #fff;
   --body-color: #fbfbfe;
   --container-color: hsl(var(--hue-color), 100%, 98%);
   --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
@@ -57,9 +57,13 @@
 
 body.dark-theme {
   /* HSL color mode */
-  --first-color-second: hsl(var(--hue-color), 30%, 8%);
-  --title-color: hsl(var(--hue-color), 8%, 95%);
+  --nav-color: #000;
+
+  --title-color: #f2f1f3;
+  --first-color: #fff;
   --text-color: hsl(var(--hue-color), 8%, 45%);
+
+  --first-color-second: hsl(var(--hue-color), 30%, 8%);
   --text-color-light: hsl(var(--hue-color), 8%, 75%);
   --input-color: hsl(var(--hue-color), 29%, 16%);
   --body-color: hsl(var(--hue-color), 28%, 12%);
