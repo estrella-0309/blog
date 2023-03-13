@@ -38,7 +38,6 @@
       </div>
 
       <div class="nav__btns">
-        <a href="#" class="nav__logo">Estrella's Blog</a>
         <i class="iconfont change-theme" :class="theme === 'lighting' ? ' icon-dark' : 'icon-light'" id="nav-close"
           @click="changetheme()"></i>
 
@@ -137,7 +136,7 @@ const ChangeIconToSearch = () => {
   }
 
   .nav__btns {
-    margin-right: var(--mb-2);
+    margin-right: var(--mb-0-5);
     height: 100%;
     display: flex;
     align-items: center;
@@ -178,42 +177,15 @@ const ChangeIconToSearch = () => {
   gap: 1.5rem;
 }
 
-@media screen and (max-width:725px) {
-  .nav__menu {
-    position: fixed;
-    top: -100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--body-color);
-    padding: 2rem 1.5rem 2rem;
-    box-shadow: 0 -1px 4px rgba(0, 0, 0, .15);
-    border-radius: 1.5rem 1.5rem 0 0;
-    transition: .5s;
-  }
-
-  .nav {
-
-    .nav__logo {
-      display: none;
-    }
-  }
-
-
-  .nav__btns {
-    justify-content: flex-end;
-    margin-right: var(--mb-2);
-
-    .nav__logo {
-      display: block;
-      order: -1;
-      font-size: var(--h3-font-size);
-      margin-left: 10px;
-      margin-right: auto;
-    }
-
-
-  }
+.nav__close {
+  position: absolute;
+  right: 1.3rem;
+  bottom: .5rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
+
+
 
 .nav__list {
   grid-template-columns: repeat(2, 1fr);
@@ -245,127 +217,121 @@ const ChangeIconToSearch = () => {
 
 }
 
-.nav__close {
-  position: absolute;
-  right: 1.3rem;
-  bottom: .5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.show-menu {
-  top: 0;
-}
-
-@media screen and (max-width: 370px) {
-
+@media screen and (max-width:499px) {
   .nav {
-
-    .nav__btns {
-      .nav__logo {
-        font-size: var(--small-font-size);
-      }
-    }
-  }
-
-
-  .nav__menu {
-    padding: 2rem .25rem 4rem;
-  }
-
-  .nav__list {
-    column-gap: 0;
-  }
-}
-
-
-
-@media screen and (min-width: 568px) {
-  .nav {
+    display: flex;
+    justify-content: space-between;
 
     .nav__logo {
-      font-size: var(--h3-font-size);
+      font-size: var(--h2-font-size);
+      margin-left: var(--mb-1);
+    }
 
+    .nav__menu {
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      background-color: var(--body-color);
+      padding: 2rem 1.5rem 2rem;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, .15);
+      border-radius: 1.5rem 1.5rem 0 0;
+      transition: .5s;
+    }
+
+    .nav__btns {
+      justify-content: flex-end;
+      margin-right: var(--mb-0-5);
+    }
+  }
+}
+
+
+
+@media screen and (min-width: 500px) {
+  .nav {
+    height: calc(var(--header-height));
+    display: flex;
+    justify-content: space-between;
+
+    .nav__left {
+      display: flex;
+      justify-content: start;
+      height: 100%;
+
+      .nav__logo {
+        font-size: var(--h2-font-size);
+      }
     }
 
     .nav__menu {
       height: 100%;
-      width: 400px;
+      width: 200px;
 
       .nav__list {
         height: 100%;
         gap: 0;
         column-gap: 0 !important;
+        grid-template-columns: 0;
+        display: flex;
 
         .nav__item {
           height: 100%;
           width: 100px;
           border: 1px solid var(--body-color);
           margin: auto 0;
+
         }
 
         .nav__link {
-          vertical-align: center;
+          display: flex;
         }
+      }
+
+      .nav__close {
+        display: none;
       }
     }
 
+    .nav__btns {
+      flex: 1;
+      justify-content: flex-end;
+
+      .nav__toggle {
+        display: none;
+      }
+    }
 
   }
+}
 
-  @media screen and (min-width: 725px) {
-    .nav {
-      .nav__left {
-        display: flex;
-        flex: 5;
-        justify-content: space-between;
-        height: 100%;
+@media screen and (min-width: 800px) {
+  .nav {
+    .nav__left {
+      margin-left: var(--mb-1);
 
-        .nav__logo {
-          margin-left: var(--mb-3);
-          font-size: var(--h1-font-size);
-        }
+      .nav__logo {
+        font-size: var(--h1-font-size);
       }
-
-
-
-      .nav__btns {
-        .nav__logo {
-          display: none
-        }
-      }
-
     }
 
-    .body {
-      margin: 0;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: space-between;
-
-    }
+    .nav__menu {
+      width: 500px;
 
 
-    .header {
-      .nav {
-        height: calc(var(--header-height) + 1.5rem);
-        column-gap: 1rem;
-
-        .nav__close,
-        .nav__toggle {
-          display: none;
-        }
-
-        .nav__list {
+      .nav__item {
+        .nav__link {
+          margin-left: var(--mb-1);
+          width: 100%;
+          height: 100%;
           display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: row !important;
+          font-size: var(--normal-font-size);
 
-          .nav__link {
-            // flex-direction: row;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
+          p {
+            margin-left: var(--mb-0-5);
           }
         }
       }
@@ -373,25 +339,49 @@ const ChangeIconToSearch = () => {
   }
 }
 
-@media screen and (max-width: 310px) {
+@media screen and (max-width: 400px) {
   .nav {
 
+    .nav__logo {
+      font-size: var(--h3-font-size);
+    }
+
+    .nav__menu {
+      padding: 2rem .25rem 4rem;
+
+      .nav__list {
+        column-gap: 0;
+      }
+    }
+
     .nav__btns {
-      margin-right: 0;
+      margin-right: 0 !important;
 
       .iconfont {
-        font-size: var(--smaller-font-size);
-      }
-
-      .nav__logo {
-        font-size: var(--smaller-font-size);
-      }
-
-      .nav__toggle {
-        // height: 100%;
-
+        font-size: var(--normal-font-size);
       }
     }
   }
+
+}
+
+@media screen and (max-width: 310px) {
+  .nav {
+    .nav__logo {
+      font-size: var(--small-font-size);
+    }
+
+    .nav__btns {
+      margin-right: 0 !important;
+
+      .iconfont {
+        font-size: var(--small-font-size);
+      }
+    }
+  }
+}
+
+.show-menu {
+  top: 0 !important;
 }
 </style>
