@@ -45,7 +45,7 @@
           <i class="iconfont icon-jiugongge"></i>
 
         </div>
-        <div class="search" style="width:40%">
+        <div class="search" style="width:50%">
 
           <i class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></i>
           <n-input round placeholder="搜索" id="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
@@ -240,6 +240,7 @@ const ChangeIconToSearch = () => {
     }
 
     .nav__btns {
+      flex: 2;
       justify-content: flex-end;
       margin-right: var(--mb-0-5);
     }
@@ -305,10 +306,10 @@ const ChangeIconToSearch = () => {
   }
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 1140px) {
   .nav {
     .nav__left {
-      margin-left: var(--mb-1);
+      margin-left: var(--mb-10);
 
       .nav__logo {
         font-size: var(--h1-font-size);
@@ -317,7 +318,6 @@ const ChangeIconToSearch = () => {
 
     .nav__menu {
       width: 500px;
-
 
       .nav__item {
         .nav__link {
@@ -335,6 +335,19 @@ const ChangeIconToSearch = () => {
           }
         }
       }
+    }
+
+    .nav__btns {
+      margin-right: var(--mb-10);
+
+      .search {
+        width: 30% !important;
+      }
+
+      .iconfont {
+        font-size: var(--h3-font-size);
+      }
+
     }
   }
 }
