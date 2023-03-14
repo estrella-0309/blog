@@ -22,7 +22,7 @@
   --container-color: hsl(var(--hue-color), 100%, 98%);
   --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
   --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
-
+  --w-card-border-color: #f2f2f2;
   /*========== Font and typography ==========*/
   --body-font: 'Poppins', sans-serif;
 
@@ -57,6 +57,7 @@
 }
 
 .dark {
+
   --nav-color: #000;
   --title-color: #f2f1f3;
   --first-color: #fff;
@@ -69,6 +70,7 @@
   --container-color: hsl(var(--hue-color), 29%, 16%);
   --scroll-bar-color: hsl(var(--hue-color), 12%, 48%);
   --scroll-thumb-color: hsl(var(--hue-color), 12%, 36%);
+  --w-card-border-color: #4C4D4F;
 }
 
 @media screen and (min-width: 968px) {

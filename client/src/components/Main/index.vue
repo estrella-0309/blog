@@ -26,7 +26,6 @@ import { reactive, ref } from 'vue'
   align-items: start;
   .list {
     flex: 2;
-    background-color: aliceblue;
     margin: 0 var(--mb-2);
   }
 
