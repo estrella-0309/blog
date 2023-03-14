@@ -10,10 +10,14 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Blog: typeof import('./src/components/blog/index.vue')['default']
+    Comment: typeof import('./src/components/comment/index.vue')['default']
     Detail: typeof import('./src/components/detail/index.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElCards: typeof import('element-plus/es')['ElCards']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
@@ -22,6 +26,7 @@ declare module '@vue/runtime-core' {
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Header: typeof import('./src/components/header/index.vue')['default']
     Introduce: typeof import('./src/components/introduce/index.vue')['default']
     Main: typeof import('./src/components/Main/index.vue')['default']

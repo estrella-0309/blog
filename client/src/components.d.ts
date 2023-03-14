@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Header: typeof import('./components/header/index.vue')['default']
     Introduce: typeof import('./components/introduce/index.vue')['default']
+    Main: typeof import('./components/Main/index.vue')['default']
     Recommend: typeof import('./components/recommend/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

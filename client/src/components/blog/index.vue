@@ -17,8 +17,16 @@
         <p> <img style="max-width: 100%; margin: 0 auto;" src="http://8.130.96.111:3030/upload/413175067664453.jpg"
             alt=""></p>
       </div>
-      <hr />
-      1
+      <div class="line"></div>
+      <div class="tag">
+        <el-tag>Tag 1</el-tag>
+        <el-tag>Tag 1</el-tag>
+        <el-tag>Tag 1</el-tag>
+
+      </div>
+
+
+
     </main>
   </el-card>
 </template>
@@ -71,30 +79,50 @@ const props = defineProps({
   main {
     display: flex;
     flex-direction: column;
-    .title{
+
+    .title {
       font-weight: 700;
       font-size: var(--h2-font-size);
     }
-    .information{
+
+    .information {
       margin: var(--mb-0-5) 0;
     }
+
     .brief {
       width: 100%;
 
       p {
-        text-indent:20px;
+        text-indent: 20px;
         word-wrap: break-word;
         word-break: break-all;
       }
     }
-    .img{
+
+    .img {
       max-width: 100%;
       margin-top: var(--mb-1);
       max-height: 400px;
       overflow: hidden;
-      img{
+
+      img {
         transform: translateY(-50%);
-        margin:50% auto;
+        margin: 50% auto;
+      }
+    }
+
+    .line {
+      margin: var(--mb-2) 0 var(--mb-1);
+      height: 1px;
+      width: 100%;
+      background-color: rgba($color: #000, $alpha: 0.1);
+      // background-color: #fbfbfe;
+    }
+
+    .tag {
+      margin-right: auto;
+      .el-tag{
+        margin:0 var(--mb-0-25);
       }
     }
   }
