@@ -19,7 +19,7 @@ const upload = multer({ storage: storage })
 
 router.post("/rich_editor_uplaod", upload.single("file"), async (req, res) => {
   try {
-    res.cc('上传成功', 200, { url: `http://localhost:3030/upload/${req.file.filename}` })
+    res.cc('上传成功', 200, { url: `http://8.130.96.111:3030/upload/${req.file.filename}` })
   } catch (err) {
     next(err)
   }
