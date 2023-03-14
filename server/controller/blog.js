@@ -44,6 +44,35 @@ exports.QueryBlogByid = async (req, res) => {
     res.cc(error, 400)
   }
 }
+exports.QueryAllBlogBytime = async (req, res) => {
+  try {
+    let result = await db.query("select * from blog where status = 1 ;")
+    result.sort((a, b) => parseInt(b.createtime) - parseInt(a.createtime));
+    const blogByMonth = {};
+    result.forEach(blog => {
+      const date = new Date(parseInt(blog.createtime));
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; 
+
+      if (!blogByMonth[year]) {
+        blogByMonth[year] = {};
+      }
+      if (!blogByMonth[year][month]) {
+        blogByMonth[year][month] = [];
+      }
+      blogByMonth[year][month].push(blog);
+    });
+    if (result.length == 0) {
+      res.cc('id错误', 400)
+    }
+    else {
+      res.cc(blogByMonth, 200)
+    }
+  } catch (error) {
+    res.cc(error, 400)
+  }
+}
+
 
 exports.QueryBlogAll = async (req, res) => {
   let { page, size } = req.body;
