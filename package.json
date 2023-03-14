@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "element-plus": "^2.3.0",
+    "unplugin-auto-import": "^0.15.1"
+  }
+}
