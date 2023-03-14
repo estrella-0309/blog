@@ -38,24 +38,23 @@
       </div>
 
       <div class="nav__btns">
-        <i class="iconfont change-theme" :class="theme === 'lighting' ? ' icon-dark' : 'icon-light'" id="nav-close"
-          @click="changetheme()"></i>
+        <el-switch v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" inline-prompt @click="ToggleTheme()"
+          style="margin: 0 var(--mb-0-5);" />
+        <!-- <i class="iconfont change-theme" :class="theme === 'light' ? ' icon-dark' : 'icon-light'" id="nav-close"
+          "></i> -->
 
         <div class="nav__toggle" id="nav-toggle" @click="ShowMenu()">
           <i class="iconfont icon-jiugongge"></i>
-
         </div>
+        <el-avatar :size="30" :src="circleUrl" />
         <div class="search" style="width:50%">
-
-          <i class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></i>
-          <n-input round placeholder="搜索" id="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
-            v-show="!taggleSearchAndIcon">
+          <el-icon class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></el-icon>
+          <el-input v-model="searchText" placeholder="搜索" @blur="ChangeSeachToIcon()" v-show="!taggleSearchAndIcon"
+            id="searchInput">
             <template #suffix>
               <i class="iconfont icon-sousuo"></i>
             </template>
-          </n-input>
-          <!-- <input type="text" placeholder="搜索" id="searchInput" v-model="searchText" @blur="ChangeSeachToIcon()"
-            v-show="!taggleSearchAndIcon"> -->
+          </el-input>
         </div>
       </div>
 
@@ -65,19 +64,36 @@
 
 <script setup lang='ts'>
 import { reactive, ref, onMounted, nextTick } from 'vue'
+import { Moon, Sunny } from '@element-plus/icons-vue'
+import { useDark, useToggle } from '@vueuse/core'
+let circleUrl = "http://8.130.96.111:3030/upload/413106851577925.jpg"
 
 //主题
-let theme = ref('lighting')
-const changetheme = () => {
-  if (theme.value === 'lighting') {
-    theme.value = 'dark'
-    document.getElementsByTagName("body")[0].className = "dark-theme";
-  }
-  else {
-    theme.value = 'lighting'
-    document.getElementsByTagName("body")[0].className = "";
-  }
-}
+
+let theme = ref<Boolean>(localStorage.getItem("UserThemeKEY") == 'dark' ? true : false)
+const isDark = useDark({
+  // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
+  storageKey: 'UserThemeKEY',
+  // 暗黑class名字
+  valueDark: 'dark',
+  // 高亮class名字
+  valueLight: 'light',
+})
+const ToggleTheme = useToggle(isDark);
+// const ToggleTheme = () => {
+//   const theme_name=theme?'light':'dark';
+
+
+//  applyTheme(theme_name);
+// if (theme.value === 'light') {
+//   theme.value = 'dark'
+//   document.getElementsByTagName("body")[0].className = "dark";
+// }
+// else {
+//   theme.value = 'light'
+//   document.getElementsByTagName("body")[0].className = "";
+// }
+// }
 
 //下拉菜单
 let dropDown = ref(false)
@@ -91,7 +107,6 @@ const closedropDown = () => {
 //搜索模块
 const searchText = ref("");
 const taggleSearchAndIcon = ref(true)
-const searchInput = ref(null)
 const ChangeSeachToIcon = () => {
   taggleSearchAndIcon.value = true
 
@@ -99,10 +114,8 @@ const ChangeSeachToIcon = () => {
 
 const ChangeIconToSearch = () => {
   taggleSearchAndIcon.value = false
-  let inputbox = document.getElementById("searchInput")
+  let input = document.getElementById("searchInput") as HTMLElement
   nextTick(() => {
-    let input = inputbox?.querySelector("input") as HTMLElement
-
     input.focus()
   })
 }
@@ -114,6 +127,7 @@ const ChangeIconToSearch = () => {
 
 <style lang="scss" scoped>
 .header {
+  height: var(--header-height);
   width: 100%;
   position: fixed;
   top: 0;
@@ -206,6 +220,7 @@ const ChangeIconToSearch = () => {
 
     &:hover {
       color: var(--first-color);
+      background-color: #ecf5ff;
     }
 
     .iconfont {
@@ -243,6 +258,10 @@ const ChangeIconToSearch = () => {
       flex: 2;
       justify-content: flex-end;
       margin-right: var(--mb-0-5);
+
+      .avator {
+        display: none;
+      }
     }
   }
 }
@@ -279,9 +298,14 @@ const ChangeIconToSearch = () => {
         .nav__item {
           height: 100%;
           width: 100px;
-          border: 1px solid var(--body-color);
+          // border-left: 1px solid var(--title-color);
+          // border-color: rgba(0, 0, 0, .15);
           margin: auto 0;
 
+          // &:last-child {
+          //   // border-right: 1px solid var(--title-color);
+          //   // border-color: rgba(0, 0, 0, .15);
+          // }
         }
 
         .nav__link {
@@ -317,11 +341,13 @@ const ChangeIconToSearch = () => {
     }
 
     .nav__menu {
-      width: 500px;
+      width: 600px;
 
       .nav__item {
+        width: 110px !important;
+
         .nav__link {
-          margin-left: var(--mb-1);
+          padding: 0 var(--mb-1);
           width: 100%;
           height: 100%;
           display: flex;
