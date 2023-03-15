@@ -1,11 +1,21 @@
 <template>
- about
+  <el-card>
+    <template #header>
+      <div class="card-header" style="text-align: center;">
+        <h2 style="font-weight: 500;">关于我</h2>
+      </div>
+    </template>
+    <div class="test">
+      12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312
+      12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312
+      12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312 12312312312
+      12312312312 12312312312 12312312312 12312312312 12312312312 12312312312
+    </div>
+  </el-card>
 </template>
 
 <script setup lang='ts'>
-import {reactive ,ref} from 'vue'
- 
+import { reactive, ref } from 'vue'
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
