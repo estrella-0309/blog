@@ -19,8 +19,8 @@
   <el-card class="tags">
     <template #header>
       <div class="card-header">
-        <el-icon>
-          <Medal />
+        <el-icon style="transform: rotate(-90deg) translateX(-2px); font-size: 15px;">
+          <Discount />
         </el-icon>
         <span>标签云</span>
       </div>
@@ -33,7 +33,7 @@
 
 <script setup lang='ts'>
 import { reactive, ref } from 'vue'
-import { Medal } from '@element-plus/icons-vue'
+import { Medal, Discount } from '@element-plus/icons-vue'
 
 import type { TagProps } from 'element-plus'
 
@@ -57,6 +57,12 @@ const items = ref<Array<Item>>([
 
 
 <style lang="scss" scoped>
+::v-deep .el-card__header {
+  /* padding-top: 10px; */
+  height: 50px;
+  background-color: var(--text-title-back-color);
+  border-bottom: 2px solid #fbbd08;
+}
 .topsearch {
   color: var(--title-color);
   width: 260px;
@@ -96,12 +102,3 @@ const items = ref<Array<Item>>([
 }
 </style>
 
-
-<style>
-.el-card__header {
-  /* padding-top: 10px; */
-  height: 50px;
-  background-color: var(--text-title-back-color);
-  border-bottom: 2px solid #fbbd08;
-}
-</style>

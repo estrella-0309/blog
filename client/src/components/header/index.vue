@@ -7,29 +7,29 @@
         <div class="nav__menu" id="nav-menu" :class="dropDown ? 'show-menu' : ' '">
           <ul class="nav__list grid">
             <li class="nav__item">
-              <a class="nav__link">
+              <router-link class="nav__link" to="/home" @click="closedropDown">
                 <i class="iconfont icon-home"></i>
                 <p>主页</p>
-              </a>
+              </router-link>
             </li>
 
             <li class="nav__item">
-              <a class="nav__link">
+              <router-link class="nav__link" to="/category" @click="closedropDown">
                 <i class="iconfont icon-fenlei"></i>
                 <p>分类</p>
-              </a>
+              </router-link>
             </li>
             <li class="nav__item">
-              <a class="nav__link">
+              <router-link class="nav__link" to="/pigeonhole" @click="closedropDown">
                 <i class="iconfont icon-shijianxian"></i>
                 <p>归档</p>
-              </a>
+              </router-link>
             </li>
             <li class="nav__item">
-              <a class="nav__link">
+              <router-link class="nav__link" to="/about" @click="closedropDown">
                 <i class="iconfont icon-guanyuwomen1"></i>
                 <p>关于我</p>
-              </a>
+              </router-link>
             </li>
           </ul>
 
@@ -48,13 +48,12 @@
         </div>
         <el-avatar :size="30" :src="circleUrl" />
         <div class="search" style="width:50%">
-          <el-icon class="iconfont icon-sousuo" v-show="taggleSearchAndIcon" @click="ChangeIconToSearch()"></el-icon>
-          <el-input v-model="searchText" placeholder="搜索" @blur="ChangeSeachToIcon()" v-show="!taggleSearchAndIcon"
-            id="searchInput">
+          <el-icon class="iconfont icon-sousuo" v-if="taggleSearchAndIcon" @click="ChangeIconToSearch()"></el-icon>
+          <el-autocomplete v-model="searchText" placeholder="搜索" ref="searchInput" @blur="ChangeSeachToIcon()" v-else>
             <template #suffix>
               <i class="iconfont icon-sousuo"></i>
             </template>
-          </el-input>
+          </el-autocomplete>
         </div>
       </div>
 
@@ -66,11 +65,12 @@
 import { reactive, ref, onMounted, nextTick } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
+import { lowerFirst } from 'lodash';
 let circleUrl = "http://8.130.96.111:3030/upload/413106851577925.jpg"
 
 //主题
 
-let theme = ref<Boolean>(localStorage.getItem("UserThemeKEY") == 'dark' ? true : false)
+let theme = ref(localStorage.getItem("UserThemeKEY") == 'dark' ? true : false)
 const isDark = useDark({
   // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
   storageKey: 'UserThemeKEY',
@@ -80,21 +80,6 @@ const isDark = useDark({
   valueLight: 'light',
 })
 const ToggleTheme = useToggle(isDark);
-// const ToggleTheme = () => {
-//   const theme_name=theme?'light':'dark';
-
-
-//  applyTheme(theme_name);
-// if (theme.value === 'light') {
-//   theme.value = 'dark'
-//   document.getElementsByTagName("body")[0].className = "dark";
-// }
-// else {
-//   theme.value = 'light'
-//   document.getElementsByTagName("body")[0].className = "";
-// }
-// }
-
 //下拉菜单
 let dropDown = ref(false)
 const ShowMenu = () => {
@@ -107,6 +92,7 @@ const closedropDown = () => {
 //搜索模块
 const searchText = ref("");
 const taggleSearchAndIcon = ref(true)
+let searchInput=ref()
 const ChangeSeachToIcon = () => {
   taggleSearchAndIcon.value = true
 
@@ -114,9 +100,8 @@ const ChangeSeachToIcon = () => {
 
 const ChangeIconToSearch = () => {
   taggleSearchAndIcon.value = false
-  let input = document.getElementById("searchInput") as HTMLElement
   nextTick(() => {
-    input.focus()
+     searchInput.value.focus();
   })
 }
 
@@ -126,6 +111,10 @@ const ChangeIconToSearch = () => {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-input__wrapper {
+  border-radius: 20px;
+}
+
 .header {
   height: var(--header-height);
   width: 100%;
@@ -252,6 +241,7 @@ const ChangeIconToSearch = () => {
       box-shadow: 0 -1px 4px rgba(0, 0, 0, .15);
       border-radius: 1.5rem 1.5rem 0 0;
       transition: .5s;
+      z-index: 999;
     }
 
     .nav__btns {
@@ -298,18 +288,14 @@ const ChangeIconToSearch = () => {
         .nav__item {
           height: 100%;
           width: 100px;
-          // border-left: 1px solid var(--title-color);
-          // border-color: rgba(0, 0, 0, .15);
           margin: auto 0;
 
-          // &:last-child {
-          //   // border-right: 1px solid var(--title-color);
-          //   // border-color: rgba(0, 0, 0, .15);
-          // }
         }
 
         .nav__link {
+          height: 100%;
           display: flex;
+          justify-content: flex-end;
         }
       }
 
@@ -367,7 +353,8 @@ const ChangeIconToSearch = () => {
       margin-right: var(--mb-10);
 
       .search {
-        width: 30% !important;
+        width: 50% !important;
+        border-radius: 30px;
       }
 
       .iconfont {

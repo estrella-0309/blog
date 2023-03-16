@@ -24,10 +24,22 @@ import { reactive, ref } from 'vue'
   width: 90%;
   justify-content: space-between;
   align-items: start;
+
   .list {
     flex: 2;
     margin: 0 var(--mb-2);
   }
 
 }
-</style>
+
+@media screen and (max-width:1000px) {
+
+  .introduce,
+  .recommed {
+    display: none;
+  }
+
+  .main {
+    width: 100%;
+  }
+}</style>
