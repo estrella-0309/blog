@@ -1,0 +1,105 @@
+.dataVisualize-box {
+	.top-box{
+		height: 100px;
+		.item-center {
+				display: flex;
+				align-content: space-between;
+				justify-content: space-between;
+				height: 100%;
+		
+				.traffic-box {
+					box-sizing: border-box;
+					display: flex;
+					width: 24%;
+					height: 100%;
+					padding: 10px;
+					border-radius: 30px;
+					justify-content: center;
+					align-items: center;
+					.userinfo{
+						display:flex;
+						flex-direction: column;
+						flex:2;
+						justify-content: center;
+						align-items: center;
+					}
+					
+					.traffic-img {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						width: 70px;
+						height: 70px;
+						margin-bottom: 10px;
+						background-color: #ffffff;
+						border-radius: 19px;
+					}
+				}
+		
+				img {
+					width: 33px;
+					height: 33px;
+				}
+		
+				.item-value {
+					margin-bottom: 4px;
+					font-family: DIN;
+					font-size: 28px;
+					font-weight: bold;
+					color: #1a1a37;
+				}
+		
+				.traffic-name {
+					overflow: hidden;
+					font-family: DIN;
+					font-size: 15px;
+					color: #1a1a37;
+					white-space: nowrap;
+				}
+		
+				.PV-traffic {
+					background-color: #fff;
+					background-size: 100% 100%;
+				}
+		
+				.blog-traffic {
+
+					background-color:#fff;
+					background-size: 100% 100%;
+					i{
+						color: #457b9d;
+						font-size: 30px;
+					}
+				}
+		
+				.today-traffic {
+					background-color: #fff;
+					background-size: 100% 100%;
+					i {
+							color: #588157;
+							font-size: 30px;
+						}
+				}
+		
+				.yesterday-traffic {
+					background-color: #fff;
+					background-size: 100% 100%;
+				}
+		}
+	}
+	main{
+		display:flex;
+		width: 100%;
+		margin-top: 30px;
+		height:65vh;
+		.main-left{
+			flex:3;
+			
+		}
+		
+		.main-right{
+			margin-left: 10px;
+			flex: 2;
+		}
+	}
+}
