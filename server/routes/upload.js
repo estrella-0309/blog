@@ -14,16 +14,15 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage })
+const uploadimg = multer({ storage: storage })
 
 
-router.post("/rich_editor_uplaod", upload.single("file"), async (req, res) => {
+router.post("/rich_editor_uplaod", uploadimg.single("file"), async (req, res) => {
   try {
-    res.cc('上传成功', 200, { url: `http://localhost:3030/upload/${req.file.filename}` })
+    res.cc('上传成功', 200, { fileUrl: `http://localhost:3030/upload/${req.file.filename}` })
   } catch (err) {
     next(err)
   }
-
 })
 
 module.exports = router

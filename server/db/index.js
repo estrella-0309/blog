@@ -16,7 +16,6 @@ async function query(sql, values) {
   const connection = await pool.getConnection();
   try {
     const [rows, fields] = await connection.query(sql, values);
-    // console.log(rows);
     return rows;
   } catch (error) {
     throw error;

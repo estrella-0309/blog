@@ -28,13 +28,14 @@ app.all("*", async (req, res, next) => {
  try {
    if (req.path.indexOf(ADMIN_TOKEN_PATH) > -1) {
      let { token } = req.headers
+     if(!token) res.cc('请先登录',401)
      let result = await db.query("select * from admin where token= ?", token)
 
      if (result.length == 1) {
        next()
      }
      else {
-       res.cc('请先登录', 403)
+       res.cc('token无效', 403)
      }
    }
    else {
