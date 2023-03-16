@@ -4,19 +4,19 @@ const GenId = require("../utils/ShowFlake");
 const genid = new GenId({ WorkerId: 1 });
 
 exports.Login = async (req, res) => {
-  let { id, password } = req.body;
-  if (!(id && password)) {
+  let { username, password } = req.body;
+  if (!(username && password)) {
     res.cc('缺少参数', 400)
   }
 
   try {
-    let result = await db.query("select * from admin where admin_id= ? and password= ?", [id, password])
+    let result = await db.query("select * from admin where admin_name= ? and password= ?", [username, password])
     console.log(result);
 
     if (result.length == 1) {
       let login_token=uudiv4();
       console.log(login_token);
-      let tokenresult=await db.update("admin",{token:login_token},{admin_id:id})
+      let tokenresult=await db.update("admin",{token:login_token},{admin_id:result.admin_id})
       console.log(tokenresult);
       result[0].token=login_token
       result[0].password=null
