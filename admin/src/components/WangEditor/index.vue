@@ -1,15 +1,11 @@
 <template>
-	<div :class="['editor-box', disabled ? 'editor-disabled' : '']">
+	<div :class="['editor-box', disabled ? 'editor-disabled' : '']" style="box-shadow:0px 0px 12px rgba(0, 0, 0, .12);border-radius: 4px ;">
 		<Toolbar class="editor-toolbar" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" v-if="!hideToolBar" />
-		<Editor
-			:style="{ height }"
-			class="editor-content'"
-			v-model="valueHtml"
-			:defaultConfig="editorConfig"
-			:mode="mode"
-			@on-created="handleCreated"
-			@on-blur="handleBlur"
-		/>
+		<div style="display:flex;">
+			<Editor :style="{ height }" class="editor-content'" v-model="valueHtml" :defaultConfig="editorConfig" :mode="mode"
+				@on-created="handleCreated" @on-blur="handleBlur" style="width: 50%;"/>
+			<div v-html="valueHtml" style=" width: 50%;overflow: scroll"  :style="{ height }"></div>
+		</div>
 	</div>
 </template>
 
@@ -17,7 +13,8 @@
 import { nextTick, computed, shallowRef, onBeforeUnmount } from "vue";
 import { IToolbarConfig, IEditorConfig } from "@wangeditor/editor";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { uploadImg, uploadVideo } from "@/api/modules/upload";
+// import { uploadImg, uploadVideo } from "@/api/modules/upload";
+import { uploadImg } from "@/api/modules/upload";
 import "@wangeditor/editor/dist/css/style.css";
 
 // 富文本 DOM 元素
@@ -114,7 +111,7 @@ props.editorConfig.MENU_CONF!["uploadVideo"] = {
 		let formData = new FormData();
 		formData.append("file", file);
 		try {
-			const { data } = await uploadVideo(formData);
+			const { data } = await uploadImg(formData);
 			insertFn(data.fileUrl);
 		} catch (error) {
 			console.log(error);

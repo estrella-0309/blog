@@ -15,4 +15,4 @@ html
 .eslintrc.js
 .prettierrc.js
 /src/mock/*
-
+/src

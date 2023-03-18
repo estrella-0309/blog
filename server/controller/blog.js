@@ -75,8 +75,14 @@ exports.QueryAllBlogBytime = async (req, res) => {
 
 
 exports.QueryBlogAll = async (req, res) => {
+ 
   let { page, size } = req.body;
+  let total=0;
+  let data={page,size};
   try {
+    let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
+    console.log(totalresult);
+    
     let result = await db.query("select * from blog where status = 1 limit ?,?;", [(page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)

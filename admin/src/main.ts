@@ -32,7 +32,7 @@ import pinia from "@/stores/index";
 import "virtual:svg-icons-register";
 // errorHandler
 import errorHandler from "@/utils/errorHandler";
-
+//markdown
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;

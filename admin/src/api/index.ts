@@ -22,7 +22,6 @@ class RequestHttp {
 	public constructor(config: AxiosRequestConfig) {
 		// 实例化axios
 		this.service = axios.create(config);
-
 		/**
 		 * @description 请求拦截器
 		 * 客户端发送请求 -> [请求拦截器] -> 服务器
@@ -34,7 +33,7 @@ class RequestHttp {
 				// * 如果当前请求不需要显示 loading,在 api 服务中通过指定的第三个参数: { headers: { noLoading: true } }来控制不显示loading，参见loginApi
 				config.headers!.noLoading || showFullScreenLoading();
 				const token = globalStore.token;
-				if (config.headers && typeof config.headers?.set === "function") config.headers.set("x-access-token", token);
+				if (config.headers && typeof config.headers?.set === "function") config.headers.set("token", token);
 				return config;
 			},
 			(error: AxiosError) => {

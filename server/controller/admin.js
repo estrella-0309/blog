@@ -5,8 +5,6 @@ exports.Login = async (req, res) => {
   if (!(username && password)) {
     res.cc('缺少参数', 400)
   }
-
-
   try {
     let result = await db.query("select * from admin where admin_name= ? and password= ?", [username, password])
     if (JSON.stringify(result) == '[]') throw new Error('用户名或密码错误')
@@ -18,6 +16,7 @@ exports.Login = async (req, res) => {
       result[0].password=null
     }
     res.cc('登录成功', 200, result[0])
+    return
   } catch (error) {
     res.cc(error, 400)
 

@@ -1,7 +1,7 @@
 // * 请求响应参数(不包含data)
 export interface Result {
-	code: string;
-	msg: string;
+	status: number;
+	message: string;
 }
 
 // * 请求响应参数(包含data)
@@ -12,15 +12,15 @@ export interface ResultData<T = any> extends Result {
 // * 分页响应参数
 export interface ResPage<T> {
 	list: T[];
-	pageNum: number;
-	pageSize: number;
+	page: number;
+	size: number;
 	total: number;
 }
 
 // * 分页请求参数
 export interface ReqPage {
-	pageNum: number;
-	pageSize: number;
+	page: number;
+	size: number;
 }
 
 // * 文件上传模块
@@ -43,6 +43,17 @@ export namespace Login {
 		[key: string]: string[];
 	}
 }
+export namespace CateGory {
+	export interface ReqCateGoryList{
+		page:number,
+		size:number
+	}
+	export interface ResCateGoryList{
+		category_id:number,
+		name:string,
+	}
+}
+
 
 // * 用户管理模块
 export namespace User {
