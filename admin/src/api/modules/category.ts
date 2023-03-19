@@ -17,11 +17,11 @@ export const newCategory = (params: {name:string}) => {
 };
 
 // * 编辑分类
-export const editCategory = (params: CateGory.ReqCateGoryList) => {
-  return http.put<Result>( `/api/category/update`, params);
+export const editCategory = (params: CateGory.ResCateGoryList) => {
+  return http.put<Result>( `/category/_token/update`, params);
 };
 
 // * 删除分类
-export const deleteUser = (params: { id: string[] }) => {
-  return http.post(PORT1 + `/user/delete`, params);
+export const deleteCategory = (params: { category_id :number} ) => {
+  return http.delete<Result>( `/category/_token/delete`, params);
 };
