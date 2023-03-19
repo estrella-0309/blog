@@ -76,7 +76,7 @@ export function MenuList(): any {
         {
             "path": "/blog/tag",
             "name": "tag",
-            "component": "/assembly/guide/index",
+            "component": "/assembly/draggable/index",
             "meta": {
                 "icon": "Briefcase",
                 "title": "标签管理",
