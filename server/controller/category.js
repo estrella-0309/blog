@@ -21,9 +21,11 @@ exports.Create = async (req, res) => {
   }
 }
 exports.Delete = async (req, res) => {
-  let data = req.body;
+  let data = req.query;
   try {
     let result = await db.remove("category", data)
+    console.log(result);
+    
     if (result.affectedRows == 1) {
       res.cc('删除成功', 200)
     }
@@ -57,7 +59,7 @@ exports.QueryCateAll = async (req, res) => {
 exports.QueryCateUpdate = async (req, res) => {
   try {
     let data = req.body
-    let result = await db.update("category", data, { Blogid: data.Blogid })
+    let result = await db.update("category", data, { category_id: data.category_id })
 
     if (result.length == 0) {
       res.cc('id错误', 400)
