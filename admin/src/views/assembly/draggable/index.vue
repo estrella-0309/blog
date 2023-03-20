@@ -1,15 +1,19 @@
 <template>
 	<div style="height: 80vh;background-color: #ffffff;">
-		<el-button type="primary" :icon="Plus" style="margin:10px 0 10px 10px"
-			@click="addDialogVisible = true">添加标签</el-button>
-		<el-table :data="categoryList" style="width: 100%;font-size: 18px;">
-			<el-table-column label="序号" type="index" width="400"></el-table-column>
-			<el-table-column prop="name" label="名称" width="400" />
-			<el-table-column prop="name" label="颜色" width="400" />
+		<el-button type="primary" :icon="Plus" style="margin:10px 0 10px 10px" @click="showAddDialog()">添加标签</el-button>
+		<el-table :data="TagsList" style="width: 100%;font-size: 18px;">
+			<el-table-column label="序号" type="index" width="300"></el-table-column>
+			<el-table-column prop="name" label="名称" width="300" />
+			<el-table-column prop="color" label="颜色" width="300">
+				<template #default="scope">
+					<div style="width: 100px;height:20px;border: 1px solid #ccc;" :style="`background-color:${scope.row.color}`">
+					</div>
+				</template>
+			</el-table-column>
 			<el-table-column label="操作">
 				<template v-slot="scope">
 					<el-button type="primary" @click="showEditDialog(scope.row)" :icon="Edit"> 编辑</el-button>
-					<el-button type="danger" slot="reference" :icon="Delete" @click="showdeleteCategory(scope.row)">删除</el-button>
+					<el-button type="danger" slot="reference" :icon="Delete" @click="showdeleteTags(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -22,11 +26,16 @@
 				<el-form-item label="分类名称" prop="name">
 					<el-input v-model="addForm.name"></el-input>
 				</el-form-item>
+				<el-form-item label="颜色" prop="name">
+					<div style="width: 100px;height:25px;border: 1px solid #ccc; margin-right: 10px;"
+						:style="`background-color:${addForm.color}`"></div>
+					<el-color-picker :predefine="addcolor" v-model="addForm.color" show-alpha />
+				</el-form-item>
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="addDialogVisible = false">取消</el-button>
-					<el-button type="primary" @click="addCategory()">
+					<el-button type="primary" @click="addTags()">
 						确定
 					</el-button>
 				</span>
@@ -37,11 +46,16 @@
 				<el-form-item label="分类名称" prop="name">
 					<el-input v-model="editForm.name"></el-input>
 				</el-form-item>
+				<el-form-item label="颜色" prop="name">
+					<div style="width: 100px;height:25px;border: 1px solid #ccc; margin-right: 10px;"
+						:style="`background-color:${editForm.color}`"></div>
+					<el-color-picker :predefine="addcolor" v-model="editForm.color" show-alpha />
+				</el-form-item>
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="editDialogVisible = false">取消</el-button>
-					<el-button type="primary" @click="updateCategory()">
+					<el-button type="primary" @click="updateTags()">
 						确定
 					</el-button>
 				</span>
@@ -52,7 +66,7 @@
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="deleteDialogVisible = false">取消</el-button>
-					<el-button type="primary" @click="deletecategory()">
+					<el-button type="primary" @click="deletetags()">
 						确定
 					</el-button>
 				</span>
@@ -63,27 +77,28 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted } from "vue";
-import { getCategoryList, newCategory, editCategory, deleteCategory } from "@/api/modules/category";
-import { CateGory } from "@/api/interface/index";
+import { getTagsList, newTags, editTags, deleteTags } from "@/api/modules/tag";
+import { Tags } from "@/api/interface/index";
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
-import { FormInstance, FormRules, ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+import {  ElMessage } from 'element-plus'
 
+let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
 
-//获取分类列表
-let categoryList = reactive<CateGory.ResCateGoryList[]>([]);
+//获取标签列表
+let TagsList = reactive<Tags.ResTagsList[]>([]);
 let queryInfo = reactive({ page: 1, size: 10 });
 let total = ref(0);
 const getData = async () => {
-	let result = await getCategoryList(queryInfo)
+	let result = await getTagsList(queryInfo)
 	total.value = result.data.total;
-	categoryList.length = 0;
-	categoryList.push(...result.data.list);
-
+	addForm.color = addcolor[(total.value) % 5]
+	TagsList.length = 0;
+	TagsList.push(...result.data.list);
 }
 
 onMounted(() => {
-	getData()
-
+	getData();
 });
 
 
@@ -103,18 +118,20 @@ const handleCurrentChange = (newPage: number) => {
 //添加分类
 let addDialogVisible = ref(false)
 let addFormRef = ref<FormInstance>()
-let addForm = reactive<{ name: string }>({ name: '' })
-
+let addForm = reactive<{ name: string, color: string }>({ name: '', color: addcolor[(total.value) % 5] })
 let formRules = reactive<FormRules>({
 	name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
 })
+const showAddDialog = () => {
+	addDialogVisible.value = true
+}
 const addDialogClosed = () => {
 	addFormRef.value?.resetFields()
 }
-const addCategory = () => {
+const addTags = () => {
 	addFormRef.value?.validate(async (valid) => {
 		if (valid) {
-			let result = await newCategory({ name: addForm.name })
+			let result = await newTags({ name: addForm.name, color: addForm.color })
 			ElMessage.success(result.message);
 			addDialogVisible.value = false
 			getData()
@@ -124,23 +141,25 @@ const addCategory = () => {
 
 //修改分类
 let editDialogVisible = ref(false)
-let editForm = reactive<CateGory.ResCateGoryList>({ name: "", category_id: 0 })
+let editForm = reactive<Tags.ResTagsList>({ name: "", tag_id: 0, color: "" })
 let editFormRef = ref<FormInstance>()
 const editDialogClosed = () => {
 	editForm.name = ""
-	editForm.category_id = 0
+	editForm.tag_id = 0
 	editFormRef.value?.resetFields()
 }
-const showEditDialog = (row: CateGory.ResCateGoryList) => {
+const showEditDialog = (row: Tags.ResTagsList) => {
 	Object.keys(editForm).forEach(key => editForm[key] = row[key])
+	console.log(editForm);
+	
 	editDialogVisible.value = true
 }
-const updateCategory = () => {
+const updateTags = () => {
 	editFormRef.value?.validate(async valid => {
 		if (valid) {
-			let result = await editCategory(editForm)
+			let result = await editTags(editForm)
 			ElMessage.success(result.message);
-			addDialogVisible.value = false
+			editDialogVisible.value = false
 			getData()
 		}
 	})
@@ -151,13 +170,13 @@ let deleteDialogVisible = ref(false)
 const deleteDialogClosed = () => {
 	deleteDialogVisible.value = false
 }
-const showdeleteCategory = (row: CateGory.ResCateGoryList) => {
+const showdeleteTags = (row: Tags.ResTagsList) => {
 	Object.keys(editForm).forEach(key => editForm[key] = row[key])
 	deleteDialogVisible.value = true
 
 }
-const deletecategory = async () => {
-	let result = await deleteCategory({ category_id: editForm.category_id })
+const deletetags = async () => {
+	let result = await deleteTags({ tag_id: editForm.tag_id })
 	ElMessage.success(result.message);
 	deleteDialogVisible.value = false
 	getData()

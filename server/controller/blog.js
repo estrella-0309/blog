@@ -4,7 +4,7 @@ const genid = new GenId({ WorkerId: 1 });
 
 exports.Create = async (req, res) => {
   let data = req.body;
-  data.Blogid = genid.NextId();
+  data.blog_id = genid.NextId();
   data.createtime = Date.now();
   data.status = "1";
   try {
@@ -18,9 +18,9 @@ exports.Create = async (req, res) => {
   }
 }
 exports.Delete = async (req, res) => {
-  let { Blogid } = req.body;
+  let { blog_id } = req.body;
   try {
-    let result = await db.remove("blog", { Blogid })
+    let result = await db.remove("blog", { blog_id })
     if (result.affectedRows == 1) {
       res.cc('删除成功', 200)
     }
@@ -31,9 +31,9 @@ exports.Delete = async (req, res) => {
 }
 
 exports.QueryBlogByid = async (req, res) => {
-  let { Blogid } = req.body;
+  let { blog_id } = req.body;
   try {
-    let result = await db.query("select * from blog where Blogid= ?", Blogid)
+    let result = await db.query("select * from blog where blog_id= ?", blog_id)
     if (result.length == 0) {
       res.cc('id错误', 400)
     }
@@ -150,13 +150,13 @@ exports.update = async (req, res) => {
   try {
     let data = req.body
 
-    let result = await db.update("blog", data, { Blogid: data.Blogid })
+    let result = await db.update("blog", data, { blog_id: data.blog_id })
 
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
     }
     else {
-      let queryresult = await db.query("select * from blog where Blogid= ?", data.Blogid)
+      let queryresult = await db.query("select * from blog where blog_id= ?", data.blog_id)
 
       res.cc('修改成功', 200, queryresult)
     }
@@ -169,7 +169,7 @@ exports.top = async (req, res) => {
   try {
     let data = req.body
 
-    let result = await db.update("blog", {istop:1}, { Blogid: data.Blogid })
+    let result = await db.update("blog", {istop:1}, { blog_id: data.blog_id })
 
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
@@ -186,7 +186,7 @@ exports.Untop = async (req, res) => {
   try {
     let data = req.body
 
-    let result = await db.update("blog", { istop: 0}, { Blogid: data.Blogid })
+    let result = await db.update("blog", { istop: 0}, { blog_id: data.blog_id })
 
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)

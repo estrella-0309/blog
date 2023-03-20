@@ -1,6 +1,9 @@
 {
 	"compilerOptions": {
 		"target": "esnext",
+		"typeRoots": [
+			"node_modules/@types"
+		],
 		"useDefineForClassFields": true,
 		"module": "esnext",
 		"moduleResolution": "node",
@@ -21,6 +24,8 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 		// 跳过第三方库检查，解决打包失败
 		"skipLibCheck": true,
 		"lib": [

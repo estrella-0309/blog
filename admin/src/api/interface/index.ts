@@ -53,53 +53,33 @@ export namespace CateGory {
 		name:string,
 	}
 }
+export namespace Tags {
+	export interface ReqTagsList {
+		page: number,
+		size: number
+	}
+	export interface ResTagsList {
+		tag_id: number,
+		name: string,
+		color:string
+	}
+}
+
 
 
 // * 用户管理模块
-export namespace User {
-	export interface ReqUserParams extends ReqPage {
-		username: string;
-		gender: number;
-		idCard: string;
-		email: string;
-		address: string;
-		createTime: string[];
-		status: number;
-	}
+export namespace Blog {
 	export interface ResUserList {
-		id: string;
-		username: string;
-		gender: number;
-		user: {
-			detail: {
-				age: number;
-			};
-		};
-		idCard: string;
-		email: string;
-		address: string;
-		createTime: string;
-		status: number;
-		avatar: string;
-		photo: any[];
-		children?: ResUserList[];
-	}
-	export interface ResStatus {
-		userLabel: string;
-		userValue: number;
-	}
-	export interface ResGender {
-		genderLabel: string;
-		genderValue: number;
-	}
-	export interface ResDepartment {
-		id: string;
-		name: string;
-		children?: ResDepartment[];
-	}
-	export interface ResRole {
-		id: string;
-		name: string;
-		children?: ResDepartment[];
+		blog_id:number,
+		category_id:number,
+		title:string,
+		content:string,
+		createtime:string,
+		tag:string,
+		status:number,
+		istop: number,
+		first_pic:string,
+		view:number,
+		introduce:string
 	}
 }
