@@ -80,9 +80,8 @@ import { ref, reactive, onMounted } from "vue";
 import { getTagsList, newTags, editTags, deleteTags } from "@/api/modules/tag";
 import { Tags } from "@/api/interface/index";
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
 import {  ElMessage } from 'element-plus'
-
+import type { FormInstance, FormRules } from 'element-plus'
 let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
 
 //获取标签列表

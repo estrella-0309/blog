@@ -13,5 +13,6 @@ router.get("/tag", blogController.QueryBlogBytag);
 router.put("/_token/update", blogController.update)
 router.put("/_token/top", blogController.top)
 router.put("/_token/top/cannel", blogController.Untop)
-
+router.put("/_token/view", blogController.view)
+router.put("/_token/view/cannel", blogController.Unview)
 module.exports = router

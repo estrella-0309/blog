@@ -6,7 +6,7 @@ exports.Create = async (req, res) => {
   let data = req.body;
   data.blog_id = genid.NextId();
   data.createtime = Date.now();
-  data.status = "1";
+  data.updatetime = Date.now();
   try {
     let result = await db.insert("blog", data)
     if (result.affectedRows == 1) {
@@ -52,7 +52,7 @@ exports.QueryAllBlogBytime = async (req, res) => {
     result.forEach(blog => {
       const date = new Date(parseInt(blog.createtime));
       const year = date.getFullYear();
-      const month = date.getMonth() + 1; 
+      const month = date.getMonth() + 1;
 
       if (!blogByMonth[year]) {
         blogByMonth[year] = {};
@@ -75,20 +75,26 @@ exports.QueryAllBlogBytime = async (req, res) => {
 
 
 exports.QueryBlogAll = async (req, res) => {
- 
-  let { page, size } = req.body;
-  let total=0;
-  let data={page,size};
+  let { page, size } = req.query;
+  page = Number(page)
+  size = Number(size)
+  let data = { page, size };
   try {
-    let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
-    console.log(totalresult);
-    
-    let result = await db.query("select * from blog where status = 1 limit ?,?;", [(page - 1) * size, size])
+    let result = await db.query("select * from blog  limit ?,?;", [(page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)
     }
     else {
-      res.cc(result, 200)
+      for (let item of result) {
+        let categoryresult = await db.query("select * from category where category_id= ? ", item.category_id)
+        item.category_id = categoryresult[0].name
+        let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", item.tag)
+        item.tag = taglist
+      }
+      let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
+      data.total=totalresult[0].count
+      data.list = result
+      res.cc('查询成功', 200, data)
     }
   } catch (error) {
     res.cc(error, 400)
@@ -98,7 +104,7 @@ exports.QueryBlogAll = async (req, res) => {
 exports.QueryBlogBycategory = async (req, res) => {
   let { page, size, category_id } = req.body;
   try {
-    let result = await db.query("select * from blog where status = 1 and category_id=? limit ?,?;", [category_id, (page - 1) * size, size])
+    let result = await db.query("select * from blog where view = 1 and category_id=? limit ?,?;", [category_id, (page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)
     }
@@ -133,7 +139,7 @@ exports.QueryBlogBytag = async (req, res) => {
     let { page, size, tag } = req.body;
     tag = '%' + tag + '%'
 
-    let result = await db.query("select * from blog where status = 1 and tag like ? limit ?,?;", [tag, (page - 1) * size, size])
+    let result = await db.query("select * from blog where view = 1 and tag like ? limit ?,?;", [tag, (page - 1) * size, size])
 
     if (result.length == 0) {
       res.cc('没有数据', 400)
@@ -169,7 +175,7 @@ exports.top = async (req, res) => {
   try {
     let data = req.body
 
-    let result = await db.update("blog", {istop:1}, { blog_id: data.blog_id })
+    let result = await db.update("blog", { istop: 1 }, { blog_id: data.blog_id })
 
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
@@ -186,13 +192,47 @@ exports.Untop = async (req, res) => {
   try {
     let data = req.body
 
-    let result = await db.update("blog", { istop: 0}, { blog_id: data.blog_id })
+    let result = await db.update("blog", { istop: 0 }, { blog_id: data.blog_id })
 
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
     }
     else {
       res.cc('取消置顶成功', 200)
+    }
+  } catch (error) {
+    res.cc(error, 400)
+  }
+}
+
+exports.view = async (req, res) => {
+  try {
+    let data = req.body
+
+    let result = await db.update("blog", { view: 1 }, { blog_id: data.blog_id })
+
+    if (result.affectedRows == 0) {
+      res.cc('id错误', 400)
+    }
+    else {
+      res.cc('隐藏成功', 200)
+    }
+  } catch (error) {
+    res.cc(error, 400)
+  }
+}
+
+exports.Unview = async (req, res) => {
+  try {
+    let data = req.body
+
+    let result = await db.update("blog", { view: 0 }, { blog_id: data.blog_id })
+
+    if (result.affectedRows == 0) {
+      res.cc('id错误', 400)
+    }
+    else {
+      res.cc('取消隐藏成功', 200)
     }
   } catch (error) {
     res.cc(error, 400)

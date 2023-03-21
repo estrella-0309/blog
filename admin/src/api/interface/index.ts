@@ -71,7 +71,7 @@ export namespace Tags {
 export namespace Blog {
 	export interface ResUserList {
 		blog_id:number,
-		category_id:number,
+		category:string,
 		title:string,
 		content:string,
 		createtime:string,
@@ -81,5 +81,13 @@ export namespace Blog {
 		first_pic:string,
 		view:number,
 		introduce:string
+	}
+	export interface Reqcreate {
+		category_id: number,
+		title: string,
+		content: string,
+		tag: string,
+		first_pic: string,
+		introduce: string
 	}
 }

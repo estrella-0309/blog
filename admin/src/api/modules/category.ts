@@ -1,4 +1,4 @@
-import { ResPage,CateGory, Result } from "@/api/interface/index";
+import { ResPage, CateGory, Result } from "@/api/interface/index";
 import { PORT1 } from "@/api/config/servicePort";
 import http from "@/api";
 
@@ -13,7 +13,7 @@ export const getCategoryList = (params: CateGory.ReqCateGoryList) => {
 
 // * 添加分类
 export const newCategory = (params: {name:string}) => {
-  return http.post<Result>( `/category/_token/create`, params);
+  return http.post<CateGory.ResCateGoryList>( `/category/_token/create`, params);
 };
 
 // * 编辑分类

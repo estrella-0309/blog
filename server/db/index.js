@@ -9,7 +9,9 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  multipleStatements: true //这里一定要加上这个。先别管什么用，一定要加上。
+  multipleStatements: true, //这里一定要加上这个。先别管什么用，一定要加上。
+  supportBigNumbers: true,
+  bigNumberStrings: true 
 })
 
 async function query(sql, values) {

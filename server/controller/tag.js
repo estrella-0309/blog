@@ -11,7 +11,7 @@ exports.Create = async (req, res) => {
     data.tag_id = genid.NextId();
     let result = await db.insert("tag", data)
     if (result.affectedRows == 1) {
-      res.cc('创建成功', 200)
+      res.cc('创建成功', 200,data)
     }
   } catch (error) {
     res.cc(error, 400)

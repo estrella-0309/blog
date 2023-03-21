@@ -1,18 +1,35 @@
 <template>
 	<div style="height: 80vh;background-color: #ffffff;">
-		<el-table :data="TagsList" style="width: 100%;font-size: 18px;">
-			<el-table-column label="序号" type="index" width="300"></el-table-column>
-			<el-table-column prop="name" label="名称" width="300" />
-			<el-table-column prop="color" label="颜色" width="300">
+		<el-table :data="blogList" :border="true" style="width: 100%;font-size: 16px;">
+			<el-table-column label="序号" type="index" width="60"></el-table-column>
+			<el-table-column prop="title" label="标题" width="200" />
+			<el-table-column prop="category_id" label="分类" width="100">
+			</el-table-column>
+			<el-table-column prop="istop" label="置顶" width="100">
 				<template #default="scope">
-					<div style="width: 100px;height:20px;border: 1px solid #ccc;" :style="`background-color:${scope.row.color}`">
-					</div>
+					<el-switch :inactive-value="0" :active-value="1" v-model="scope.row.istop" @change="ChangeTop(scope.row)" />
+				</template>
+			</el-table-column>
+			<el-table-column prop="view" label="" width="100">
+				<template #default="scope">
+					<el-switch :inactive-value="0" :active-value="1" v-model="scope.row.view" @change="ChangeView(scope.row)" />
+				</template>
+			</el-table-column>
+			<el-table-column prop="createtime" label="创建时间" width="200">
+				<template #default="scope">
+					{{ timestampToTime(scope.row.createtime) }}
+				</template>
+			</el-table-column>
+			<el-table-column prop="updatetime" label="上次更新" width="200">
+				<template #default="scope">
+					{{ timestampToTime(scope.row.updatetime) }}
 				</template>
 			</el-table-column>
 			<el-table-column label="操作">
 				<template v-slot="scope">
-					<el-button type="primary" @click="showEditDialog(scope.row)" :icon="Edit"> 编辑</el-button>
-					<el-button type="danger" slot="reference" :icon="Delete" @click="showdeleteTags(scope.row)">删除</el-button>
+					<el-button type="primary" @click="EditDialog(scope.row.blog_id)" :icon="Edit"> 编辑</el-button>
+					<el-button type="danger" slot="reference" :icon="Delete"
+						@click="showdeleteBlog(scope.row.blog_id)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -20,46 +37,6 @@
 			:current-page="queryInfo.page" :page-sizes="[10, 20, 30, 50]" :page-size="queryInfo.size" :total="total"
 			layout="total, sizes, prev, pager, next, jumper" background>
 		</el-pagination>
-		<el-dialog v-model="addDialogVisible" title="添加分类" width="30%" @close="addDialogClosed">
-			<el-form ref="addFormRef" :model="addForm" :rules="formRules" label-width="80px">
-				<el-form-item label="分类名称" prop="name">
-					<el-input v-model="addForm.name"></el-input>
-				</el-form-item>
-				<el-form-item label="颜色" prop="name">
-					<div style="width: 100px;height:25px;border: 1px solid #ccc; margin-right: 10px;"
-						:style="`background-color:${addForm.color}`"></div>
-					<el-color-picker :predefine="addcolor" v-model="addForm.color" show-alpha />
-				</el-form-item>
-			</el-form>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button @click="addDialogVisible = false">取消</el-button>
-					<el-button type="primary" @click="addTags()">
-						确定
-					</el-button>
-				</span>
-			</template>
-		</el-dialog>
-		<el-dialog v-model="editDialogVisible" title="修改分类" width="30%" @close="editDialogClosed">
-			<el-form ref="editFormRef" :model="editForm" :rules="formRules" label-width="80px">
-				<el-form-item label="分类名称" prop="name">
-					<el-input v-model="editForm.name"></el-input>
-				</el-form-item>
-				<el-form-item label="颜色" prop="name">
-					<div style="width: 100px;height:25px;border: 1px solid #ccc; margin-right: 10px;"
-						:style="`background-color:${editForm.color}`"></div>
-					<el-color-picker :predefine="addcolor" v-model="editForm.color" show-alpha />
-				</el-form-item>
-			</el-form>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button @click="editDialogVisible = false">取消</el-button>
-					<el-button type="primary" @click="updateTags()">
-						确定
-					</el-button>
-				</span>
-			</template>
-		</el-dialog>
 		<el-dialog v-model="deleteDialogVisible" title="删除分类" width="30%" @close="deleteDialogClosed">
 			<span>确定要删除该分类吗</span>
 			<template #footer>
@@ -76,23 +53,25 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted } from "vue";
-import { getTagsList, newTags, editTags, deleteTags } from "@/api/modules/tag";
-import { Tags } from "@/api/interface/index";
+import { getBlogList, TopNews, UnTopNews, ViewNews, UnViewNews } from "@/api/modules/blog";
+import { Blog } from "@/api/interface/index";
 import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 import { FormInstance, FormRules, ElMessage } from 'element-plus'
-
+import { timestampToTime } from "@/utils/time";
 let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
 
 //获取标签列表
-let TagsList = reactive<Tags.ResTagsList[]>([]);
+let blogList = reactive<Blog.ResUserList[]>([]);
 let queryInfo = reactive({ page: 1, size: 10 });
 let total = ref(0);
 const getData = async () => {
-	let result = await getTagsList(queryInfo)
-	total.value = result.data.total;
-	addForm.color = addcolor[(total.value) % 5]
-	TagsList.length = 0;
-	TagsList.push(...result.data.list);
+	let result = await getBlogList(queryInfo)
+	for (let i of result.data.list) {
+		blogList.push(i)
+	}
+	total.value = Number(result.data.total)
+	console.log(blogList);
+
 }
 
 onMounted(() => {
@@ -105,80 +84,51 @@ const handleSizeChange = (newSize: number) => {
 	queryInfo.size = newSize
 	getData()
 };
-
 const handleCurrentChange = (newPage: number) => {
 	queryInfo.page = newPage
 	getData()
 };
 
-
-
-//添加分类
-let addDialogVisible = ref(false)
-let addFormRef = ref<FormInstance>()
-let addForm = reactive<{ name: string, color: string }>({ name: '', color: addcolor[(total.value) % 5] })
-let formRules = reactive<FormRules>({
-	name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
-})
-const showAddDialog = () => {
-	addDialogVisible.value = true
+const EditDialog = (id:number) => {
+	console.log(1);
 }
-const addDialogClosed = () => {
-	addFormRef.value?.resetFields()
-}
-const addTags = () => {
-	addFormRef.value?.validate(async (valid) => {
-		if (valid) {
-			let result = await newTags({ name: addForm.name, color: addForm.color })
-			ElMessage.success(result.message);
-			addDialogVisible.value = false
-			getData()
-		}
-	})
-}
-
-//修改分类
-let editDialogVisible = ref(false)
-let editForm = reactive<Tags.ResTagsList>({ name: "", tag_id: 0, color: "" })
-let editFormRef = ref<FormInstance>()
-const editDialogClosed = () => {
-	editForm.name = ""
-	editForm.tag_id = 0
-	editFormRef.value?.resetFields()
-}
-const showEditDialog = (row: Tags.ResTagsList) => {
-	Object.keys(editForm).forEach(key => editForm[key] = row[key])
-	console.log(editForm);
-
-	editDialogVisible.value = true
-}
-const updateTags = () => {
-	editFormRef.value?.validate(async valid => {
-		if (valid) {
-			let result = await editTags(editForm)
-			ElMessage.success(result.message);
-			editDialogVisible.value = false
-			getData()
-		}
-	})
-}
-
-//删除分类
+//删除博客
+let deleteId = ref(0);
 let deleteDialogVisible = ref(false)
-const deleteDialogClosed = () => {
+let deleteDialogClosed = () => {
 	deleteDialogVisible.value = false
+	deleteId.value = 0
 }
-const showdeleteTags = (row: Tags.ResTagsList) => {
-	Object.keys(editForm).forEach(key => editForm[key] = row[key])
+
+const showdeleteBlog = (id: number) => {
 	deleteDialogVisible.value = true
+	deleteId.value = id;
+}
+
+const deletetags = () => {
+	console.log(deleteId.value);
+}
+
+
+const ChangeTop = async (row: Blog.ResUserList) => {
+	let result;
+	if (row.istop) {
+		result = await TopNews({ blog_id: row.blog_id })
+	}
+	else {
+		result = await UnTopNews({ blog_id: row.blog_id })
+	}
+
 
 }
-const deletetags = async () => {
-	let result = await deleteTags({ tag_id: editForm.tag_id })
-	ElMessage.success(result.message);
-	deleteDialogVisible.value = false
-	getData()
-
+const ChangeView = async (row: Blog.ResUserList) => {
+	let result;
+	if (row.view) {
+		result = await ViewNews({ blog_id: row.blog_id })
+	}
+	else {
+		result = await UnViewNews({ blog_id: row.blog_id })
+	}
 }
 </script>
 

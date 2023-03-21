@@ -28,26 +28,25 @@
 				</el-col>
 			</el-row>
 			<el-col :span="12">
-				<el-form-item label="封面" prop="firstPicture">
+				<el-form-item label="封面" prop="first_pic">
 					<el-upload class="avatar-uploader" action="http://localhost:3030/api/upload/rich_editor_uplaod"
 						:show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-						<img v-if="form.firstPicture" :src="form.firstPicture" class="avatar" />
+						<img v-if="form.first_pic" :src="form.first_pic" class="avatar" />
 						<el-icon v-else class="avatar-uploader-icon">
 							<Plus />
 						</el-icon>
 					</el-upload>
 				</el-form-item>
 			</el-col>
-			<el-form-item label="文章描述" prop="description">
-				<WangEditor height="300px" v-model:value="form.description" :toolbarConfig="toolbarConfig" mode="simple" />
+			<el-form-item label="文章描述" prop="introduce">
+				<WangEditor height="300px" v-model:value="form.introduce" :toolbarConfig="toolbarConfig" mode="simple" />
 			</el-form-item>
 
 			<el-form-item label="文章正文" prop="content">
-				<WangEditor  height="300px" v-model:value="form.content" :toolbarConfig="toolbarConfig"
-					mode="simple" />
+				<WangEditor height="300px" v-model:value="form.content" :toolbarConfig="toolbarConfig" mode="simple" />
 			</el-form-item>
 			<el-form-item style="text-align: right;">
-				<el-button type="primary" @click="sumit()">保存</el-button>
+				<el-button type="primary" @click="submit()">保存</el-button>
 			</el-form-item>
 		</el-form>
 
@@ -58,36 +57,29 @@
 import { ref, reactive, onMounted } from "vue";
 import { CateGory, Tags } from "@/api/interface/index";
 import WangEditor from "@/components/WangEditor/index.vue";
-import { getCategoryList } from "@/api/modules/category";
-import { getTagsList } from "@/api/modules/tag";
+import { getCategoryList, newCategory } from "@/api/modules/category";
+import { CreateBlogList } from "@/api/modules/blog";
+import { getTagsList, newTags } from "@/api/modules/tag";
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-import type { UploadProps,FormRules, FormInstance } from 'element-plus'
-
+import type { UploadProps, FormRules, FormInstance } from 'element-plus'
 const form = reactive({
-	title: '',
-	firstPicture: '',
-	description: '',
-	content: '',
-	cate: null,
+	title: '123',
+	first_pic: "http://localhost:3030/upload/415905227305029.png",
+	introduce: '123',
+	content: '123',
+	cate: '',
 	tagList: [],
-	words: null,
-	readTime: null,
-	views: 0,
-	appreciation: false,
-	recommend: false,
-	commentEnabled: false,
-	top: false,
-	published: false,
 })
 const formRules = reactive<FormRules>({
 	title: [{ required: true, message: '请输入标题', trigger: 'change' }],
-	firstPicture: [{ required: true, message: '请输入首图链接', trigger: 'change' }],
+	first_pic: [{ required: true, message: '请输入首图链接', trigger: 'change' }],
 	cate: [{ required: true, message: '请选择分类', trigger: 'change' }],
 	tagList: [{ required: true, message: '请选择标签', trigger: 'change' }],
-	description: [{ required: true, message: '请输入描述', trigger: 'change' }],
+	introduce: [{ required: true, message: '请输入描述', trigger: 'change' }],
 	content: [{ required: true, message: '请输入内容', trigger: 'change' }]
 })
+let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
 let categoryList = reactive<CateGory.ResCateGoryList[]>([])
 let tagList = reactive<Tags.ResTagsList[]>([])
 const dialogVisible = ref(false);
@@ -110,23 +102,46 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 	response,
 	uploadFile
 ) => {
-	form.firstPicture= URL.createObjectURL(uploadFile.raw!)
+	form.first_pic = URL.createObjectURL(uploadFile.raw!)
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (rawFile.size / 1024 / 1024 > 2) {
+	if (rawFile.size / 1024 / 1024 > 2) {
 		ElMessage.error('Avatar picture size can not exceed 2MB!')
 		return false
 	}
 	return true
 }
-const sumit=()=>{
+const submit = () => {
 	formRef.value?.validate(async (valid) => {
 		if (valid) {
-			// let result = await newTags({ name: formRef.name, color: formRef.color })
-			// ElMessage.success(result.message);
-			console.log(form);
+			let cate =0;
+			if (typeof (form.cate) == "string") {
+				let result=await newCategory({name: form.cate})
+				cate = result.data.category_id
+			}
+			else{
+				cate=form.cate
+			}
+			console.log(cate);
+			const taglist=[];
+			for(let tag of form.tagList){
+				if(typeof (tag) == "string"){
+					let color= addcolor[Math.floor(Math.random() * (5)) + 1]
+					let result=await newTags({ name: tag, color})
+					taglist.push(result.data.tag_id)
+				}
+				else{
+					taglist.push(tag)
+				}
+			}
 			
+			let data={title:form.title,introduce:form.introduce,first_pic:form.first_pic,category_id:cate,tag:taglist.toString(),content:form.content}
+			let result=await CreateBlogList(data);
+			console.log(data);
+			
+			// let result = await newTags({ name: formRef.name, color: formRef.color })
+			// ElMessage.success(result.message); 
 		}
 	})
 }

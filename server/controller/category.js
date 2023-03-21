@@ -13,7 +13,7 @@ exports.Create = async (req, res) => {
     data.category_id = genid.NextId(); 
     let result = await db.insert("category", data)
     if (result.affectedRows == 1) {
-      res.cc('创建成功', 200)
+      res.cc('创建成功', 200,data)
     }
   } catch (error) {
     res.cc(error, 400)

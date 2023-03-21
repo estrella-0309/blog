@@ -11,7 +11,7 @@ export const getTagsList = (params: ReqPage) => {
 
 // * 添加分类
 export const newTags = (params: { name: string,color:string }) => {
-  return http.post<Result>(`/tag/_token/create`, params);
+  return http.post<Tags.ResTagsList>(`/tag/_token/create`, params);
 };
 
 // * 编辑分类

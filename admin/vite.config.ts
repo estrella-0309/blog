@@ -51,6 +51,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 		},
 		plugins: [
 			vue(),
+			// AutoImport({
+			// 	resolvers: [ElementPlusResolver()],
+			// }),
+			// Components({
+			// 	resolvers: [ElementPlusResolver()],
+			// }),
 			createHtmlPlugin({
 				inject: {
 					data: {
@@ -73,13 +79,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 			viteEnv.VITE_REPORT && visualizer(),
 			// * gzip compress
 			viteEnv.VITE_BUILD_GZIP &&
-				viteCompression({
-					verbose: true,
-					disable: false,
-					threshold: 10240,
-					algorithm: "gzip",
-					ext: ".gz"
-				}),
+			viteCompression({
+				verbose: true,
+				disable: false,
+				threshold: 10240,
+				algorithm: "gzip",
+				ext: ".gz"
+			}),
 			// * cdn 引入（vue按需引入会导致依赖vue的插件出现问题(列如:pinia/vuex)）
 			importToCDN({
 				modules: [
