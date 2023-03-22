@@ -53,13 +53,15 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted } from "vue";
-import { getBlogList, TopNews, UnTopNews, ViewNews, UnViewNews } from "@/api/modules/blog";
+import { useRoute, useRouter } from 'vue-router'
+import { getBlogList, TopNews, UnTopNews, DeleteBlogByid, ViewNews, UnViewNews } from "@/api/modules/blog";
 import { Blog } from "@/api/interface/index";
-import { Delete, Edit, Plus } from '@element-plus/icons-vue'
-import { FormInstance, FormRules, ElMessage } from 'element-plus'
+import { Delete, Edit } from '@element-plus/icons-vue'
 import { timestampToTime } from "@/utils/time";
-let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
+import { ElMessage } from 'element-plus'
 
+const route = useRoute()
+const router = useRouter()
 //获取标签列表
 let blogList = reactive<Blog.ResUserList[]>([]);
 let queryInfo = reactive({ page: 1, size: 10 });
@@ -89,8 +91,11 @@ const handleCurrentChange = (newPage: number) => {
 	getData()
 };
 
-const EditDialog = (id:number) => {
-	console.log(1);
+const EditDialog = (id: number) => {
+	router.push({
+		path: '/blog/write',
+		query: { id: id }
+	})
 }
 //删除博客
 let deleteId = ref(0);
@@ -105,8 +110,12 @@ const showdeleteBlog = (id: number) => {
 	deleteId.value = id;
 }
 
-const deletetags = () => {
-	console.log(deleteId.value);
+const deletetags = async () => {
+	let result = await DeleteBlogByid({ blog_id: deleteId.value })
+	ElMessage.success(result?.message);
+	deleteDialogVisible.value = false
+	getData();
+
 }
 
 

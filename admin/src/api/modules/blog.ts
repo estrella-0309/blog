@@ -8,8 +8,17 @@ import http from "@/api";
 export const getBlogList = (params: ReqPage) => {
   return http.get<ResPage<Blog.ResUserList>>( `/blog/all`, params);
 };
+export const getBlogById = (params: {blog_id:number}) => {
+  return http.get<Blog.ResUserList>(`/blog/one`, params);
+};
 export const CreateBlogList = (params: Blog.Reqcreate) => {
   return http.post(`/blog/_token/create`, params);
+};
+export const DeleteBlogByid = (params: { blog_id: number }) => {
+  return http.delete(`/blog/_token/delete`, params);
+};
+export const UpdateBlogByid = (params: Blog.Requpdate) => {
+  return http.put(`/blog/_token/update`, params);
 };
 
 export const TopNews = (params:{blog_id:Number}) => {

@@ -55,21 +55,25 @@
 
 <script setup lang="ts" name="wangEditor">
 import { ref, reactive, onMounted } from "vue";
+import { useRoute } from 'vue-router'
 import { CateGory, Tags } from "@/api/interface/index";
 import WangEditor from "@/components/WangEditor/index.vue";
 import { getCategoryList, newCategory } from "@/api/modules/category";
-import { CreateBlogList } from "@/api/modules/blog";
+import { CreateBlogList, getBlogById, UpdateBlogByid } from "@/api/modules/blog";
 import { getTagsList, newTags } from "@/api/modules/tag";
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadProps, FormRules, FormInstance } from 'element-plus'
+
+const route = useRoute()
+
 const form = reactive({
-	title: '123',
-	first_pic: "http://localhost:3030/upload/415905227305029.png",
-	introduce: '123',
-	content: '123',
+	title: '',
+	first_pic: "",
+	introduce: '',
+	content: '',
 	cate: '',
-	tagList: [],
+	tagList: <string[]>[],
 })
 const formRules = reactive<FormRules>({
 	title: [{ required: true, message: '请输入标题', trigger: 'change' }],
@@ -85,16 +89,38 @@ let tagList = reactive<Tags.ResTagsList[]>([])
 const dialogVisible = ref(false);
 const formRef = ref<FormInstance>()
 const toolbarConfig = ref()
-let queryInfo = reactive({ page: 1, size: 10 });
+let catelist = new Set()
+let taglist = new Set()
+let queryInfo = reactive({ page: 1, size: 100 });
 
 const getData = async () => {
 	let cateresult = await getCategoryList(queryInfo)
 	categoryList.push(...cateresult.data.list)
+	for (let item of categoryList) {
+		catelist.add(item.category_id)
+	}
 	let tagresult = await getTagsList(queryInfo)
-	tagList.push(...tagresult.data.list)
-}
 
+	tagList.push(...tagresult.data.list)
+	for (let item of tagList) {
+		taglist.add(item.tag_id)
+	}
+}
+const getDataByid = async (id: number) => {
+	let result = await getBlogById({ blog_id: id })
+	let data = result.data
+	form.title = data.title;
+	form.content = data.content;
+	form.first_pic = data.first_pic;
+	form.introduce = data.introduce;
+	form.cate = data.category_id;
+	form.tagList = data.tag.split(",")
+}
 onMounted(() => {
+	if (route.query.id) {
+		getDataByid(Number(route.query.id))
+
+	}
 	getData()
 })
 
@@ -115,33 +141,44 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
 const submit = () => {
 	formRef.value?.validate(async (valid) => {
 		if (valid) {
-			let cate =0;
-			if (typeof (form.cate) == "string") {
-				let result=await newCategory({name: form.cate})
+			let cate = 0;
+			if (!catelist.has(form.cate)) {
+				let result = await newCategory({ name: form.cate })
 				cate = result.data.category_id
 			}
-			else{
-				cate=form.cate
+			else {
+				cate = Number(form.cate)
 			}
-			console.log(cate);
-			const taglist=[];
-			for(let tag of form.tagList){
-				if(typeof (tag) == "string"){
-					let color= addcolor[Math.floor(Math.random() * (5)) + 1]
-					let result=await newTags({ name: tag, color})
-					taglist.push(result.data.tag_id)
+			console.log(form.tagList);
+			let submittag = [];
+			for (let tag of form.tagList) {
+				if (!taglist.has(tag)) {
+					let color = addcolor[Math.floor(Math.random() * (5)) + 1]
+					let result = await newTags({ name: tag, color })
+					submittag.push(result.data.tag_id)
 				}
-				else{
-					taglist.push(tag)
+				else {
+					submittag.push(tag)
 				}
 			}
-			
-			let data={title:form.title,introduce:form.introduce,first_pic:form.first_pic,category_id:cate,tag:taglist.toString(),content:form.content}
-			let result=await CreateBlogList(data);
-			console.log(data);
-			
-			// let result = await newTags({ name: formRef.name, color: formRef.color })
-			// ElMessage.success(result.message); 
+			let result;
+			if (route.query.id) {
+				let data = { blog_id: route.query.id, title: form.title, introduce: form.introduce, first_pic: form.first_pic, category_id: cate, tag: submittag.toString(), content: form.content }
+				result = await UpdateBlogByid(data);
+			}
+			else {
+				let data = { title: form.title, introduce: form.introduce, first_pic: form.first_pic, category_id: cate, tag: submittag.toString(), content: form.content }
+				result = await CreateBlogList(data);
+			}
+			ElMessage.success(result?.message);
+
+			form.title = ''
+			form.first_pic = ""
+			form.introduce = ''
+			form.content = ''
+			form.cate = ''
+			form.tagList = <string[]>[]
+
 		}
 	})
 }

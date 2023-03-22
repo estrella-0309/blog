@@ -18,7 +18,7 @@ exports.Create = async (req, res) => {
   }
 }
 exports.Delete = async (req, res) => {
-  let { blog_id } = req.body;
+  let { blog_id } = req.query;
   try {
     let result = await db.remove("blog", { blog_id })
     if (result.affectedRows == 1) {
@@ -31,14 +31,14 @@ exports.Delete = async (req, res) => {
 }
 
 exports.QueryBlogByid = async (req, res) => {
-  let { blog_id } = req.body;
+  let { blog_id } = req.query;
   try {
-    let result = await db.query("select * from blog where blog_id= ?", blog_id)
+    let result = await db.query("select * from blog where blog_id= ?",  blog_id )
     if (result.length == 0) {
       res.cc('id错误', 400)
     }
     else {
-      res.cc(result, 200)
+      res.cc('查询成功', 200,result[0])
     }
   } catch (error) {
     res.cc(error, 400)
@@ -92,7 +92,7 @@ exports.QueryBlogAll = async (req, res) => {
         item.tag = taglist
       }
       let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
-      data.total=totalresult[0].count
+      data.total = totalresult[0].count
       data.list = result
       res.cc('查询成功', 200, data)
     }
@@ -155,15 +155,15 @@ exports.QueryBlogBytag = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     let data = req.body
-
+    console.log(data);
+    data.updatetime=Date.now()
     let result = await db.update("blog", data, { blog_id: data.blog_id })
-
+    console.log(result);
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
     }
     else {
       let queryresult = await db.query("select * from blog where blog_id= ?", data.blog_id)
-
       res.cc('修改成功', 200, queryresult)
     }
   } catch (error) {
