@@ -12,7 +12,7 @@
         </p>
       </div>
       <div class="img">
-        <p> <img style="max-width: 100%; margin: 0 auto;" src="http://8.130.96.111:3030/upload/413175067664453.jpg"
+        <p> <img style="max-width: 100%; margin: 0 auto;" src="http://localhost:3030/upload/416271206461509.png"
             alt=""></p>
       </div>
       <el-divider />

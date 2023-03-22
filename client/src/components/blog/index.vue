@@ -1,21 +1,29 @@
 <template>
   <el-card class="blog">
-
-    <div class="istop"></div>
+    <div class="istop" v-if="data.istop"></div>
     <main>
-      <div class="title">111</div>
-      <div class="information">123123</div>
+      <div class="title">{{ data.title }}</div>
+      <div class="information" style="font-size: 14px;">
+        <div style="color:#49a7de;margin-right: 20px;"> <el-icon>
+            <Calendar />
+          </el-icon>
+          {{ timestampToTime(data.createtime) }}</div>
+        <div style="color:#6d6a7c ;">
+          <el-icon style="transform: translateY(2px);">
+            <View />
+          </el-icon>
+          {{ data.view }}
+        </div>
+
+      </div>
       <div class="brief">
-        <!-- <p>
-          sakldjfasklfjklasfjlkjfsklfjklasdfjjfasklfjasklfasklfjsklfjklasfjklasjfklasfjklasjdflkfffkfkfkfsdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakfkfkfkfkf
-        </p> -->
-        <p>
-          几啊时空裂缝那是考虑到发斯蒂芬就上课了放假拉速度快放假时空裂缝加速度快蓝飞机as考虑到放进去为我of你看龙卷风纳斯达克浪费加速度快蓝飞机萨迪克蓝飞机萨迪克蓝飞机萨迪克蓝飞机萨迪克蓝飞机未复工你今晚看你的时空裂缝教师端卡莉法算法那阿萨德卡莉法阿斯拉达咖啡机阿萨德卡莉法你
+        <p v-html="data.introduce">
+
         </p>
       </div>
       <div class="img">
-        <p> <img style="max-width: 100%; margin: 0 auto;" src="http://8.130.96.111:3030/upload/413175067664453.jpg"
-            alt=""></p>
+        <p> <img style="max-width: 100%; margin: 0 auto;" :src="data.first_pic" alt="">
+        </p>
       </div>
       <div class="line"></div>
       <div class="tag">
@@ -33,7 +41,7 @@
 
 <script setup lang='ts'>
 import { reactive, ref } from 'vue'
-
+import { timestampToTime } from "@/utils/time"
 const props = defineProps({
   data: {
     type: Object,
@@ -87,6 +95,9 @@ const props = defineProps({
 
     .information {
       margin: var(--mb-0-5) 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .brief {
@@ -121,8 +132,9 @@ const props = defineProps({
 
     .tag {
       margin-right: auto;
-      .el-tag{
-        margin:0 var(--mb-0-25);
+
+      .el-tag {
+        margin: 0 var(--mb-0-25);
       }
     }
   }

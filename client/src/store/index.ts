@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-export const userThemeStore = defineStore({
-  id: 'theme',
+import { defineStore, createPinia } from 'pinia';
+export const GlobalStore = defineStore({
+  id: 'GlobalStore',
   state: () => ({
     theme: "lighting-theme",
   }),

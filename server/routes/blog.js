@@ -9,6 +9,8 @@ router.get("/all", blogController.QueryBlogAll);
 router.get("/category", blogController.QueryBlogBycategory);
 router.get("/tag/all", blogController.QueryBlogtagAll);
 router.get("/timeline", blogController.QueryAllBlogBytime);
+router.get("/view", blogController.QueryBlogByview);
+
 router.get("/tag", blogController.QueryBlogBytag);
 router.put("/_token/update", blogController.update)
 router.put("/_token/top", blogController.top)

@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { Medal, Discount } from '@element-plus/icons-vue'
 
 import type { TagProps } from 'element-plus'
@@ -51,6 +51,9 @@ const items = ref<Array<Item>>([
   { type: 'warning', label: 'Tag123 5' },
 
 ])
+onMounted(() => {
+  console.log(1);
+})
 </script>
 
 

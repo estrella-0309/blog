@@ -66,7 +66,7 @@ import { reactive, ref, onMounted, nextTick } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { lowerFirst } from 'lodash';
-let circleUrl = "http://8.130.96.111:3030/upload/413106851577925.jpg"
+let circleUrl = "http://localhost:3030/upload/416271206461509.png"
 
 //主题
 

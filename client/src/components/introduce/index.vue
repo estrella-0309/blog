@@ -1,29 +1,27 @@
 <template>
   <div class="introduce">
-    <div class="img"> <img src="http://8.130.96.111:3030/upload/413175067664453.jpg" alt=""></div>
+    <div class="img"> <img src="http://localhost:3030/upload/416281087725637.jpg" alt=""></div>
     <div class="text">
       <div class="name">{{ person.name }}</div>
       <div class="memo" v-html="person.memo"></div>
       <div class="introduce-icon">
         <ul>
           <li>
-            <a> <i class="iconfont icon-github"></i></a>
+            <a href="https://github.com/estrella-0309" target="_blank" class="github" style="padding-left:5px"> <i
+                class="iconfont icon-github" style="font-size: 19px;"></i></a>
+          </li>
+          <li>
+            <a href="https://gitee.com/strlla" target="_blank" class="gitee" style="padding-left:7px"> <i class="iconfont icon-gitee"></i></a>
+          </li>
+          <li>
+            <!-- <a href="https://space.bilibili.com/178661728?spm_id_from=333.1007.0.0"  target="_blank"> <i class="iconfont icon-bzhan"></i></a> -->
+            <a href="https://space.bilibili.com/178661728?spm_id_from=333.1007.0.0" class="bzhan"> <i
+                class="iconfont icon-bzhan"></i></a>
 
           </li>
           <li>
-            <a> <i class="iconfont icon-gitee"></i></a>
-
-
-          </li>
-          <li>
-            <a> <i class="iconfont icon-bzhan"></i></a>
-
-
-          </li>
-          <li>
-            <a> <i class="iconfont icon-wangyiyun1"></i></a>
-
-
+            <a href="https://music.163.com/#/user/home?id=304067998" target="_blank" class="cloud"> <i
+                class="iconfont icon-wangyiyun1"></i></a>
           </li>
         </ul>
       </div>
@@ -47,6 +45,7 @@ let person = {
   border-radius: 30px;
   background-color: var(--nav-color);
   padding-bottom: 10px;
+
   // background-color: pink;
   .img {
     border-top-left-radius: 20px;
@@ -73,7 +72,7 @@ let person = {
     .introduce-icon {
       ul {
         display: flex;
-
+        color: #000;
         li {
           width: 30px;
           height: 30px;
@@ -92,13 +91,10 @@ let person = {
             }
           }
 
-          &:nth-child(1) {
+          .github {
             a {
-              padding-left: 5px;
+              padding-left: 4px;
 
-              i {
-                font-size: 20px;
-              }
             }
 
             &:hover {
@@ -106,7 +102,7 @@ let person = {
             }
           }
 
-          &:nth-child(2) {
+          .gitee {
             a {
               padding-left: 7px;
             }
@@ -116,13 +112,14 @@ let person = {
             }
           }
 
-          &:nth-child(3) {
+          .bzhan {
 
             &:hover {
-              color: #00b3ef;
+              color: #00b3ef !important;
             }
           }
-          &:nth-child(4) {
+
+          .cloud {
 
             &:hover {
               color: #da0315;

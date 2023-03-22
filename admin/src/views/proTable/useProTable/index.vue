@@ -10,9 +10,9 @@
 					<el-switch :inactive-value="0" :active-value="1" v-model="scope.row.istop" @change="ChangeTop(scope.row)" />
 				</template>
 			</el-table-column>
-			<el-table-column prop="view" label="" width="100">
+			<el-table-column prop="status" label="是否隐藏" width="100">
 				<template #default="scope">
-					<el-switch :inactive-value="0" :active-value="1" v-model="scope.row.view" @change="ChangeView(scope.row)" />
+					<el-switch :inactive-value="0" :active-value="1" v-model="scope.row.status" @change="ChangeView(scope.row)" />
 				</template>
 			</el-table-column>
 			<el-table-column prop="createtime" label="创建时间" width="200">
@@ -132,7 +132,7 @@ const ChangeTop = async (row: Blog.ResUserList) => {
 }
 const ChangeView = async (row: Blog.ResUserList) => {
 	let result;
-	if (row.view) {
+	if (row.status) {
 		result = await ViewNews({ blog_id: row.blog_id })
 	}
 	else {
