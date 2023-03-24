@@ -9,11 +9,13 @@
       </div>
     </template>
     <ul>
-      <li>
-        <div class="title">123</div>
-        <div class="createtime">2023-01-11</div>
+      <li v-for="item in topSearchList" :key="item.blog_id" :style="`background:url(${item.first_pic}) ;`">
+        <div style="background: linear-gradient(180deg,transparent,rgba(0,0,0,.8)); width: 100%;">
+          <div class="title">{{ item.title }}</div>
+          <div class="createtime">{{ timestampToTime(item.createtime) }}</div>
+        </div>
+
       </li>
-      <li>2</li>
     </ul>
   </el-card>
   <el-card class="tags">
@@ -25,8 +27,10 @@
         <span>标签云</span>
       </div>
     </template>
-    <el-tag v-for="item in items" :key="item.label" :type="item.type" class="mx-1" effect="dark">
-      {{ item.label }}
+    <el-tag style="border: 0  !important;" v-for="item in items" :key="item.tag_id" :color="item.color" class="mx-1"
+      effect="dark">
+      {{ item.name }} ({{ item.nums }})
+
     </el-tag>
   </el-card>
 </template>
@@ -34,25 +38,32 @@
 <script setup lang='ts'>
 import { reactive, ref, onMounted } from 'vue'
 import { Medal, Discount } from '@element-plus/icons-vue'
+import { getTopSearchList, getTagNums } from "@/api/modules/blog";
+import { timestampToTime } from "@/utils/time";
+import { CateGory, blog } from "@/api/interface/index";
 
-import type { TagProps } from 'element-plus'
 
-type Item = { type: TagProps['type']; label: string }
+type Item = { color: string; name: string, nums: number, tag_id: number }
 
-const items = ref<Array<Item>>([
-  { type: '', label: 'Tag 1' },
-  { type: 'success', label: 'Tag 22222' },
-  { type: 'info', label: 'Tag 3123123' },
-  { type: 'danger', label: 'Tag12311231 4' },
-  { type: 'warning', label: 'Tag12313123 5' },
-  { type: 'warning', label: 'Ta12233g 5' },
-  { type: 'warning', label: 'Tag1321 5' },
-  { type: 'warning', label: 'Tag3231231231 5' },
-  { type: 'warning', label: 'Tag123 5' },
+const items = reactive<Item[]>([])
+let topSearchList = reactive<blog.ResUserList[]>([])
+let categoryList = reactive<CateGory.ResCateGoryList[]>([]);
+let queryInfo = reactive({ page: 1, size: 10 });
 
-])
+const getData = async () => {
+  let result = await getTopSearchList()
+  for (let i = 0; i < result.data.length; i++) {
+    topSearchList.push(result.data[i])
+  }
+  let tagresult = await getTagNums()
+  for (let i = 0; i < tagresult.data.length; i++) {
+    if (tagresult.data[i].nums) {
+      items.push(tagresult.data[i])
+    }
+  }
+}
 onMounted(() => {
-  console.log(1);
+  getData()
 })
 </script>
 
@@ -66,6 +77,7 @@ onMounted(() => {
   background-color: var(--text-title-back-color);
   border-bottom: 2px solid #fbbd08;
 }
+
 .topsearch {
   color: var(--title-color);
   width: 260px;
@@ -99,7 +111,8 @@ onMounted(() => {
 .tags {
   margin-top: 30px;
   width: 260px;
-  span{
+
+  span {
     margin: 0 3px;
   }
 }

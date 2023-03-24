@@ -6,7 +6,6 @@ exports.Create = async (req, res) => {
 
   try {
     let queryresult = await db.query("select name from category where name=?", data.name)
-    console.log(queryresult);
     if (queryresult.length!=0) {
       throw new Error('分类已存在',400);
     }
@@ -24,8 +23,6 @@ exports.Delete = async (req, res) => {
   let data = req.query;
   try {
     let result = await db.remove("category", data)
-    console.log(result);
-    
     if (result.affectedRows == 1) {
       res.cc('删除成功', 200)
     }

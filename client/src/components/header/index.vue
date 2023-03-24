@@ -12,13 +12,24 @@
                 <p>主页</p>
               </router-link>
             </li>
+            <el-dropdown trigger="click" style="height:100%;">
+              <li class="nav__item">
+                <div class="nav__link" @click="closedropDown">
+                  <i class="iconfont icon-fenlei"></i>
+                  <span class="el-dropdown-link">
+                    <p>分类</p>
+                  </span>
+                </div>
+              </li>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="cate in catelist" style="width: 100px;display:flex; justify-content: center;"
+                    :key="cate.category_id" @click="Todetail(cate)">{{ cate.name }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
 
-            <li class="nav__item">
-              <router-link class="nav__link" to="/category" @click="closedropDown">
-                <i class="iconfont icon-fenlei"></i>
-                <p>分类</p>
-              </router-link>
-            </li>
+            </el-dropdown>
+
             <li class="nav__item">
               <router-link class="nav__link" to="/pigeonhole" @click="closedropDown">
                 <i class="iconfont icon-shijianxian"></i>
@@ -65,7 +76,10 @@
 import { reactive, ref, onMounted, nextTick } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
-import { lowerFirst } from 'lodash';
+import { getCategoryList } from "@/api/modules/category";
+import { ResPage, CateGory, Result } from "@/api/interface/index";
+import { useRoute, useRouter } from 'vue-router'
+
 let circleUrl = "http://localhost:3030/upload/416271206461509.png"
 
 //主题
@@ -88,25 +102,38 @@ const ShowMenu = () => {
 const closedropDown = () => {
   dropDown.value = false;
 };
-
 //搜索模块
 const searchText = ref("");
 const taggleSearchAndIcon = ref(true)
-let searchInput=ref()
+let searchInput = ref()
 const ChangeSeachToIcon = () => {
   taggleSearchAndIcon.value = true
-
 }
 
 const ChangeIconToSearch = () => {
   taggleSearchAndIcon.value = false
   nextTick(() => {
-     searchInput.value.focus();
+    searchInput.value.focus();
   })
 }
+let catelist = reactive<CateGory.ResCateGoryList[]>([])
+const getData = async () => {
+  let result = await getCategoryList({ page: 1, size: 100 })
+  console.log(result);
+  catelist.push(...result.data.list)
+}
 
-
-
+onMounted(() => {
+  getData()
+})
+const router = useRouter()
+const Todetail = (item: CateGory.ResCateGoryList) => {
+  console.log(item);
+  router.push({
+    path: '/category',
+    query: { id: item.category_id }
+  })
+}
 
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <el-card class="blog">
+  <el-card class="blog" v-if="!data.status" @click="Todeail(data.blog_id)">
     <div class="istop" v-if="data.istop"></div>
     <main>
       <div class="title">{{ data.title }}</div>
@@ -12,12 +12,17 @@
           <el-icon style="transform: translateY(2px);">
             <View />
           </el-icon>
+
           {{ data.view }}
         </div>
-
+        <div> <el-icon style="transform: translateY(2px);margin-left: 20px;">
+            <Folder />
+          </el-icon>
+          {{ data.category_id }}
+        </div>
       </div>
       <div class="brief">
-        <p v-html="data.introduce">
+        <p v-html="data.introduce" style="padding: 0 15px;">
 
         </p>
       </div>
@@ -27,10 +32,8 @@
       </div>
       <div class="line"></div>
       <div class="tag">
-        <el-tag>Tag 1</el-tag>
-        <el-tag>Tag 1</el-tag>
-        <el-tag>Tag 1</el-tag>
-
+        <el-tag effect="dark" style="border: 0 !important;" :color="tag.color" v-for="tag in data.tag"
+          :key="tag.tag_id">{{ tag.name }}</el-tag>
       </div>
 
 
@@ -42,12 +45,22 @@
 <script setup lang='ts'>
 import { reactive, ref } from 'vue'
 import { timestampToTime } from "@/utils/time"
+import { useRouter } from "vue-router";
+const router = useRouter()
 const props = defineProps({
   data: {
     type: Object,
     default: () => { }
   }
 })
+const Todeail = (id: string) => {
+  router.push({
+    path: '/details',
+    query: {
+      id: id
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -104,9 +117,9 @@ const props = defineProps({
       width: 100%;
 
       p {
-        text-indent: 20px;
         word-wrap: break-word;
         word-break: break-all;
+        text-align: justify;
       }
     }
 
@@ -117,7 +130,6 @@ const props = defineProps({
       overflow: hidden;
 
       img {
-        transform: translateY(-50%);
         margin: 50% auto;
       }
     }
@@ -132,6 +144,7 @@ const props = defineProps({
 
     .tag {
       margin-right: auto;
+      color: #fff;
 
       .el-tag {
         margin: 0 var(--mb-0-25);

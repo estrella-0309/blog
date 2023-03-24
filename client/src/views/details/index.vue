@@ -1,27 +1,37 @@
 <template>
   <el-card class="blog">
+    <div class="istop"></div>
     <main>
-      <div class="title">111</div>
-      <div class="information">123123</div>
+      <div class="title">{{ data.title }}</div>
+      <div class="information" style="font-size: 14px;">
+        <div style="color:#49a7de;margin-right: 20px;"> <el-icon>
+            <Calendar />
+          </el-icon>
+          {{ timestampToTime(data.createtime) }}</div>
+        <div style="color:#6d6a7c ;">
+          <el-icon style="transform: translateY(2px);">
+            <View />
+          </el-icon>
+
+          {{ data.view }}
+        </div>
+        <div> <el-icon style="transform: translateY(2px);margin-left: 20px;">
+            <Folder />
+          </el-icon>
+          {{ data.category_id }}
+        </div>
+      </div>
       <div class="brief">
-        <!-- <p>
-          sakldjfasklfjklasfjlkjfsklfjklasdfjjfasklfjasklfasklfjsklfjklasfjklasjfklasfjklasjdflkfffkfkfkfsdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakfkfkfkfkf
-        </p> -->
-        <p>
-          几啊时空裂缝那是考虑到发斯蒂芬就上课了放假拉速度快放假时空裂缝加速度快蓝飞机as考虑到放进去为我of你看龙卷风纳斯达克浪费加速度快蓝飞机萨迪克蓝飞机萨迪克蓝飞机萨迪克蓝飞机萨迪克蓝飞机未复工你今晚看你的时空裂缝教师端卡莉法算法那阿萨德卡莉法阿斯拉达咖啡机阿萨德卡莉法你
+        <p v-html="data.content" style="padding: 0 15px;">
+
         </p>
       </div>
-      <div class="img">
-        <p> <img style="max-width: 100%; margin: 0 auto;" src="http://localhost:3030/upload/416271206461509.png"
-            alt=""></p>
-      </div>
-      <el-divider />
+      <div class="line"></div>
       <div class="tag">
-        <el-tag>Tag 1</el-tag>
-        <el-tag>Tag 1</el-tag>
-        <el-tag>Tag 1</el-tag>
+        <el-tag effect="dark" style="border: 0 !important;" :color="tag.color" v-for="tag in data.tag"
+          :key="tag.tag_id">{{ tag.name }}</el-tag>
       </div>
-      <el-divider />
+      <div class="line"></div>
       <div class="comment">
         <div class="pushfirstcomment">
           <div class="title">发布评论</div>
@@ -42,22 +52,32 @@
         <Comment />
       </div>
     </main>
-
-
   </el-card>
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+import { timestampToTime } from "@/utils/time"
+import { useRoute } from "vue-router";
 import { User } from '@element-plus/icons-vue'
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => { }
-  }
+import { getBlogByid } from "@/api/modules/blog";
+import { blog } from "@/api/interface/index";
+const route = useRoute()
+let data = ref<any>({})
+let queryInfo = reactive({ id: route.query.id as string });
+const getData = async () => {
+  console.log(1);
+  let result = await getBlogByid(queryInfo)
+  data.value = result.data
+  console.log(data, "data");
+
+}
+
+onMounted(() => {
+  getData()
 })
-let QQnumber = ""
-let firstcomment = ""
+let QQnumber =ref("")
+let firstcomment = ref("")
 </script>
 
 <style lang="scss" scoped>
@@ -74,6 +94,26 @@ let firstcomment = ""
   margin-bottom: 30px;
   position: relative;
 
+  .istop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    border: 23px solid transparent;
+    border-top-color: #ff0000;
+    border-right-color: #ff0000;
+    font-family: iconfont;
+
+    &::before {
+      content: '\e632';
+      position: absolute;
+      top: -16px;
+      left: 0;
+      color: #fff;
+    }
+
+  }
+
   main {
     display: flex;
     flex-direction: column;
@@ -85,15 +125,18 @@ let firstcomment = ""
 
     .information {
       margin: var(--mb-0-5) 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .brief {
       width: 100%;
 
       p {
-        text-indent: 20px;
         word-wrap: break-word;
         word-break: break-all;
+        text-align: justify;
       }
     }
 
@@ -104,7 +147,6 @@ let firstcomment = ""
       overflow: hidden;
 
       img {
-        transform: translateY(-50%);
         margin: 50% auto;
       }
     }
@@ -119,6 +161,7 @@ let firstcomment = ""
 
     .tag {
       margin-right: auto;
+      color: #fff;
 
       .el-tag {
         margin: 0 var(--mb-0-25);

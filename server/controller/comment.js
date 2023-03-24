@@ -8,7 +8,6 @@ function getQQname(qqnumber) {
 }
 function getQQavtorandname(qq) {
   return Promise.all([getQQavator(qq), getQQname(qq)]).then((res)=>{
-    console.log(res[0],res[1]);
   })
 }
 exports.Createfirst = async (req, res) => {
@@ -17,7 +16,6 @@ exports.Createfirst = async (req, res) => {
 
     // let result=await getQQavtorandname(qq);
     let result = await getQQavator(qq);
-    console.log(result);
     // let result = {};
     // let blognums = await db.query("SELECT COUNT(*) as count FROM blog");
     // result.blognums = blognums[0].count;

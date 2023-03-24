@@ -32,9 +32,16 @@ exports.Delete = async (req, res) => {
 }
 
 exports.QueryBlogByid = async (req, res) => {
-  let { blog_id } = req.query;
+  let { id } = req.query;
+  let blog_id = Number(id)
   try {
     let result = await db.query("select * from blog where blog_id= ?", blog_id)
+    console.log(result);
+    
+    let categoryresult = await db.query("select * from category  where category_id= ? ", result[0].category_id)
+    result[0].category_id = categoryresult.name
+    let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", result[0].tag)
+    result[0].tag = taglist
     if (result.length == 0) {
       res.cc('id错误', 400)
     }
@@ -81,13 +88,13 @@ exports.QueryBlogAll = async (req, res) => {
   size = Number(size)
   let data = { page, size };
   try {
-    let result = await db.query("select * from blog  limit ?,?;", [(page - 1) * size, size])
+    let result = await db.query("select * from blog  ORDER BY istop DESC limit ?,?;", [(page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)
     }
     else {
       for (let item of result) {
-        let categoryresult = await db.query("select * from category where category_id= ? ", item.category_id)
+        let categoryresult = await db.query("select * from category  where category_id= ? ", item.category_id)
         item.category_id = categoryresult[0].name
         let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", item.tag)
         item.tag = taglist
@@ -103,14 +110,27 @@ exports.QueryBlogAll = async (req, res) => {
 }
 
 exports.QueryBlogBycategory = async (req, res) => {
-  let { page, size, category_id } = req.body;
+  let { page, size, id } = req.query;
+  page = Number(page)
+  size = Number(size)
+  let data = { page, size };
+  let category_id = Number(id)
   try {
-    let result = await db.query("select * from blog where status = 1 and category_id=? limit ?,?;", [category_id, (page - 1) * size, size])
+    let result = await db.query("select * from blog   where  category_id=? ORDER BY istop limit ?,?;", [category_id, (page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)
     }
     else {
-      res.cc(result, 200)
+      for (let item of result) {
+        let categoryresult = await db.query("select * from category  where category_id= ? ", item.category_id)
+        item.category_id = categoryresult[0].name
+        let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", item.tag)
+        item.tag = taglist
+      }
+      let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
+      data.total = totalresult[0].count
+      data.list = result
+      res.cc('查询成功', 200, data)
     }
   } catch (error) {
     res.cc(error, 400)
@@ -147,6 +167,30 @@ exports.QueryBlogByview = async (req, res) => {
     res.cc(error, 400)
   }
 }
+exports.QueryBlogTagnNums = async (req, res) => {
+  try {
+    let taglist = await db.query("select tag from blog ")
+    let map = new Map()
+    for (let tag of taglist) {
+      let temp = tag.tag.split(",")
+      for (let i of temp) {
+        map.set(i, (map.get(i) || 0) + 1)
+      }
+    }
+    let result = await db.query("select * from tag ")
+    for (let i = 0; i < result.length; i++) {
+      result[i].nums = map.get(result[i].tag_id)
+    }
+    if (result.length == 0) {
+      res.cc('没有数据', 400)
+    }
+    else {
+      res.cc('获取成功', 200, result)
+    }
+  } catch (error) {
+    res.cc(error, 400)
+  }
+}
 
 exports.QueryBlogBytag = async (req, res) => {
   try {
@@ -169,10 +213,8 @@ exports.QueryBlogBytag = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     let data = req.body
-    console.log(data);
     data.updatetime = Date.now()
     let result = await db.update("blog", data, { blog_id: data.blog_id })
-    console.log(result);
     if (result.affectedRows == 0) {
       res.cc('id错误', 400)
     }

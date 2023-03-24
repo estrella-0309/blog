@@ -63,6 +63,9 @@ export namespace Tags {
     name: string,
     color: string
   }
+  export interface ResTagNumslist {
+    color: string; name: string, nums: number, tag_id: number
+  }
 }
 
 
@@ -82,6 +85,23 @@ export namespace blog {
     view: number,
     introduce: string
   }
+  export interface details {
+    blog_id: number,
+    category_id: string,
+    title: string,
+    content: string,
+    createtime: string,
+    tag: object,
+    status: number,
+    istop: number,
+    first_pic: string,
+    view: number,
+    introduce: string
+  }
+  export interface ReqCateid extends ReqPage {
+    id:string
+  }
+  
   export interface Reqcreate {
     category_id: number,
     title: string,

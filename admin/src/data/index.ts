@@ -3,7 +3,7 @@ export function MenuList(): any {
         {
             "path": "/home/index",
             "name": "home",
-            "component": "/dashboard/dataVisualize/index",
+            "component": "/dashboard/index",
             "meta": {
                 "icon": "HomeFilled",
                 "title": "首页",
@@ -32,7 +32,7 @@ export function MenuList(): any {
                 {
                     "path": "/blog/write",
                     "name": "writleblog",
-                    "component": "/assembly/wangEditor/index",
+                    "component": "/blog/index",
                     "meta": {
                         "icon": "EditPen",
                         "title": "写博客",
@@ -46,7 +46,7 @@ export function MenuList(): any {
                 {
                     "path": "/blog/manage",
                     "name": "blogmanage",
-                    "component": "/proTable/useProTable/index",
+                    "component": "/blog/blogmanage",
                     "meta": {
                         "icon": "Tickets",
                         "title": "文章管理",
@@ -62,7 +62,7 @@ export function MenuList(): any {
         {
             "path": "/blog/category",
             "name": "category",
-            "component": "/assembly/guide/index",
+            "component": "/category/index",
             "meta": {
                 "icon": "Menu",
                 "title": "分类管理",
@@ -76,7 +76,7 @@ export function MenuList(): any {
         {
             "path": "/blog/tag",
             "name": "tag",
-            "component": "/assembly/draggable/index",
+            "component": "/tag/index",
             "meta": {
                 "icon": "Briefcase",
                 "title": "标签管理",
@@ -100,106 +100,6 @@ export function MenuList(): any {
                 "isAffix": false,
                 "isKeepAlive": true
             },
-        },
-        {
-            "path": "/echarts",
-            "name": "echarts",
-            "redirect": "/echarts/waterChart",
-            "meta": {
-                "icon": "TrendCharts",
-                "title": "Echarts",
-                "isLink": "",
-                "isHide": false,
-                "isFull": false,
-                "isAffix": false,
-                "isKeepAlive": true
-            },
-            "children": [
-                {
-                    "path": "/echarts/waterChart",
-                    "name": "waterChart",
-                    "component": "/echarts/waterChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "水型图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/echarts/columnChart",
-                    "name": "columnChart",
-                    "component": "/echarts/columnChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "柱状图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/echarts/lineChart",
-                    "name": "lineChart",
-                    "component": "/echarts/lineChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "折线图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/echarts/pieChart",
-                    "name": "pieChart",
-                    "component": "/echarts/pieChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "饼图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/echarts/radarChart",
-                    "name": "radarChart",
-                    "component": "/echarts/radarChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "雷达图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/echarts/nestedChart",
-                    "name": "nestedChart",
-                    "component": "/echarts/nestedChart/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "嵌套环形图",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                }
-            ]
         },
         {
             "path": "/system",
@@ -229,90 +129,6 @@ export function MenuList(): any {
                         "isKeepAlive": true
                     }
                 },
-                {
-                    "path": "/system/roleManage",
-                    "name": "roleManage",
-                    "component": "/system/roleManage/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "角色管理",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/system/menuMange",
-                    "name": "menuMange",
-                    "component": "/system/menuMange/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "菜单管理",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/system/departmentManage",
-                    "name": "departmentManage",
-                    "component": "/system/departmentManage/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "部门管理",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/system/dictManage",
-                    "name": "dictManage",
-                    "component": "/system/dictManage/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "字典管理",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/system/timingTask",
-                    "name": "timingTask",
-                    "component": "/system/timingTask/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "定时任务",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                },
-                {
-                    "path": "/system/systemLog",
-                    "name": "systemLog",
-                    "component": "/system/systemLog/index",
-                    "meta": {
-                        "icon": "Menu",
-                        "title": "系统日志",
-                        "isLink": "",
-                        "isHide": false,
-                        "isFull": false,
-                        "isAffix": false,
-                        "isKeepAlive": true
-                    }
-                }
             ]
         },
         
