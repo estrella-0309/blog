@@ -40,7 +40,7 @@
                 content="输入QQ号将自动拉取昵称和头像" placement="bottom-start">
                 <el-input v-model="QQnumber" style="width: 30%;" placeholder="请输入qq号" :prefix-icon="User" />
               </el-tooltip>
-              <el-button style="margin-left: auto;" type="primary">发布评论</el-button>
+              <el-button style="margin-left: auto;" type="primary" @click="SendFirstComment()">发布评论</el-button>
             </div>
 
             <el-input v-model="firstcomment" :rows="5" type="textarea" placeholder="Please input" />
@@ -61,12 +61,15 @@ import { timestampToTime } from "@/utils/time"
 import { useRoute } from "vue-router";
 import { User } from '@element-plus/icons-vue'
 import { getBlogByid } from "@/api/modules/blog";
-import { blog } from "@/api/interface/index";
+
+// import { Comment } from "@/api/interface/index";
+import { FrstCommentCreate } from "@/api/modules/comment";
+
 const route = useRoute()
 let data = ref<any>({})
 let queryInfo = reactive({ id: route.query.id as string });
 const getData = async () => {
-  console.log(1);
+  console.log(queryInfo, "info");
   let result = await getBlogByid(queryInfo)
   data.value = result.data
   console.log(data, "data");
@@ -74,10 +77,33 @@ const getData = async () => {
 }
 
 onMounted(() => {
+
   getData()
 })
-let QQnumber =ref("")
+let QQnumber = ref("")
 let firstcomment = ref("")
+const SendFirstComment = async () => {
+  if (QQnumber.value == "") {
+    ElMessage.error("请填写qq号");
+    return
+  }
+  else if (firstcomment.value == '') {
+    ElMessage.error("请填写内容!")
+    return
+  }
+  let data = {
+    user_id: Number(QQnumber.value),
+    content: firstcomment.value,
+    blog_id: route.query.id as string
+  }
+  let result = await FrstCommentCreate(data)
+  if (result.status == 200) {
+    ElMessage.success(result.message)
+    QQnumber.value = "",
+      firstcomment.value = ""
+  }
+
+}
 </script>
 
 <style lang="scss" scoped>

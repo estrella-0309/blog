@@ -2,7 +2,6 @@ import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequ
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/api/config/Loading";
 import { ResultData } from "@/api/interface";
 import { ResultEnum } from "@/api/enums";
-import { ElMessage } from "element-plus";
 import router from "@/router";
 import { checkStatus } from "@/api/utils/checkStatus";
 

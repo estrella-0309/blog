@@ -13,8 +13,7 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
-
+import { reactive, ref, onMounted } from 'vue'
 </script>
 
 <style lang="scss" scoped>

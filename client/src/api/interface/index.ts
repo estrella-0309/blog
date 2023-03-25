@@ -1,3 +1,5 @@
+import { Comment } from "vue";
+
 // * 请求响应参数(不包含data)
 export interface Result {
   status: number;
@@ -68,6 +70,14 @@ export namespace Tags {
   }
 }
 
+export namespace Comment {
+
+  export interface Reqfirst {
+    blog_id: string,
+    user_id: number,
+    content: string,
+  }
+}
 
 
 // * 用户管理模块
@@ -99,9 +109,9 @@ export namespace blog {
     introduce: string
   }
   export interface ReqCateid extends ReqPage {
-    id:string
+    id: string
   }
-  
+
   export interface Reqcreate {
     category_id: number,
     title: string,
@@ -119,3 +129,4 @@ export namespace blog {
     introduce: string
   }
 }
+

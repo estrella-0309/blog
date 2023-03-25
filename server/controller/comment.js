@@ -1,26 +1,22 @@
 const db = require('../db/index')
-const axios=require("axios")
-function getQQavator(qqnumber) {
-  return axios.get(`"http://q2.qlogo.cn/headimg_dl?dst_uin=${qqnumber}&spec=1"`);
-}
-function getQQname(qqnumber) {
-  return axios.get(`"http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${qqnumber}"`);
-}
-function getQQavtorandname(qq) {
-  return Promise.all([getQQavator(qq), getQQname(qq)]).then((res)=>{
-  })
-}
+const GenId = require("../utils/ShowFlake");
+const genid = new GenId({ WorkerId: 1 });
+const axios = require("axios")
+
 exports.Createfirst = async (req, res) => {
   try {
-    let {qq}=req.body;
+    console.log(req.body);
+    let data = req.body;
 
-    // let result=await getQQavtorandname(qq);
-    let result = await getQQavator(qq);
-    // let result = {};
-    // let blognums = await db.query("SELECT COUNT(*) as count FROM blog");
-    // result.blognums = blognums[0].count;
-    // let commentnum = await db.query("SELECT COUNT(*) as count FROM comment")
-    // res.cc('查询成功', 200, result)
+    if (data.user_id == 0 || data.content == '' || blog_id == '') {
+      throw new Error('缺少参数')
+    }
+    data.createtime = Date.now();
+    data.comment_id = genid.NextId();
+    let result = await db.insert("comment", data)
+    if (result.affectedRows == 1) {
+      res.cc('评论成功', 200)
+    }
   } catch (error) {
     res.cc(error, 400)
 

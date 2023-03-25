@@ -1,7 +1,7 @@
 <template>
   <div class="commentList" v-for="i in 3" :key="i">
     <div class="first">
-      <el-avatar :src="circleUrl" />
+      <el-avatar :src="`http://q2.qlogo.cn/headimg_dl?dst_uin=${QQnumber}&spec=1`" />
       <div class="information" style="padding-left: 5px;">
 
         <div class="content"><span>estrella</span>:内容</div>
@@ -18,7 +18,7 @@
       <div v-for="i in 3" :key="i">
         <el-card shadow="never" style="width: 80%; margin: var(--mb-1);">
           <div style=" display: flex;align-items: flex-end;">
-            <el-avatar :src="circleUrl" />
+            <el-avatar :src="`http://q2.qlogo.cn/headimg_dl?dst_uin=${QQnumber}&spec=1`" />
             <div class="information" style="padding-left: 5px;">
               <div class="content"><span>estrella</span>:内容</div>
               <div class="createtime">2023-03-09 18:04</div>
@@ -40,7 +40,7 @@
 <script setup lang='ts'>
 import { reactive, ref } from 'vue'
 import { ChatLineSquare } from '@element-plus/icons-vue'
-const circleUrl = "http://8.130.96.111:3030/upload/413106851577925.jpg"
+const QQnumber = 444186682
 
 </script>
 

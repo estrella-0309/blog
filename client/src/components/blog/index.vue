@@ -54,6 +54,7 @@ const props = defineProps({
   }
 })
 const Todeail = (id: string) => {
+
   router.push({
     path: '/details',
     query: {

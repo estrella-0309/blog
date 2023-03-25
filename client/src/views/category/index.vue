@@ -16,15 +16,16 @@ import { getCategoryListByid } from "@/api/modules/blog";
 import { blog } from "@/api/interface/index";
 import { useRoute, useRouter } from 'vue-router'
 let list = reactive<blog.ResUserList[]>([])
-
-let queryInfo = reactive({ page: 1, size: 10, id: "" });
-let loading = ref(true)
 const route = useRoute()
+let queryInfo = reactive({ page: 1, size: 10, id: route.query.id as string });
+let loading = ref(true)
+
+const router = useRouter()
 const getData = async () => {
   console.log(route.query);
-
-  queryInfo.id = route.query.id as string
+  loading.value=true
   let result = await getCategoryListByid(queryInfo)
+  list=[]
   list.push(...result.data.list)
   queryInfo.id = result.data.list[0].category_id
   loading.value = false
@@ -32,6 +33,17 @@ const getData = async () => {
 onMounted(() => {
   getData()
 })
+watch(
+  () => route.query,
+  () => {
+    // 强制组件重新渲染
+    queryInfo.id = ''
+    nextTick(() => {
+      queryInfo.id = route.query.id as string || ''
+      getData()
+    })
+  }
+)
 </script>
 
 <style lang="scss" scoped></style>
