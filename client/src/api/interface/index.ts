@@ -70,12 +70,32 @@ export namespace Tags {
   }
 }
 
-export namespace Comment {
+export namespace commenttype {
+
+  export interface ReqSecond {
+    parent_nickname:string
+  }
 
   export interface Reqfirst {
     blog_id: string,
     user_id: number,
     content: string,
+    [key: string | number]: string | number | boolean;
+  }
+  export interface ReqGetComment{
+    page:number,
+    size:number,
+    blog_id:string
+  }
+  export interface comment {
+    blog_id:string,
+    comment_id:number,
+    content:string,
+    createtime:string,
+    isbanned:0|1,
+    parent_id:string|null,
+    parent_qqnumber:number|null,
+    user_id:number
   }
 }
 

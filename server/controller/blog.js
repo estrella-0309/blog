@@ -36,7 +36,7 @@ exports.QueryBlogByid = async (req, res) => {
   let blog_id = Number(id)
   try {
     let result = await db.query("select * from blog where blog_id= ?", blog_id)
-    console.log(result);
+    
     
     let categoryresult = await db.query("select * from category  where category_id= ? ", result[0].category_id)
     result[0].category_id = categoryresult.name

@@ -86,7 +86,6 @@ const formRules = reactive<FormRules>({
 let addcolor = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'];
 let categoryList = reactive<CateGory.ResCateGoryList[]>([])
 let tagList = reactive<Tags.ResTagsList[]>([])
-const dialogVisible = ref(false);
 const formRef = ref<FormInstance>()
 const toolbarConfig = ref()
 let catelist = new Set()

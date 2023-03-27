@@ -37,19 +37,18 @@
           <div class="title">发布评论</div>
           <el-card shadow="never" style="width: 100%;">
             <div style="margin-bottom: 10px;display:flex;"> <el-tooltip trigger="click" class="box-item" effect="dark"
-                content="输入QQ号将自动拉取昵称和头像" placement="bottom-start">
+                content="输入QQ号将自动拉取头像" placement="bottom-start">
                 <el-input v-model="QQnumber" style="width: 30%;" placeholder="请输入qq号" :prefix-icon="User" />
               </el-tooltip>
+              <el-input v-model="nickname" style="width: 30%;margin-left: 30px;" placeholder="请输入昵称"
+                :prefix-icon="ChatLineRound" />
               <el-button style="margin-left: auto;" type="primary" @click="SendFirstComment()">发布评论</el-button>
             </div>
 
             <el-input v-model="firstcomment" :rows="5" type="textarea" placeholder="Please input" />
           </el-card>
-
         </div>
-        <h3 style="margin-top: var(--mb-1);font-weight: normal;">评论 |共计10条评论</h3>
-        <el-divider />
-        <Comment />
+        <Comment :data="commentdata" @updatecomment="getCommetData" />
       </div>
     </main>
   </el-card>
@@ -59,29 +58,33 @@
 import { reactive, ref, onMounted } from 'vue'
 import { timestampToTime } from "@/utils/time"
 import { useRoute } from "vue-router";
-import { User } from '@element-plus/icons-vue'
+import { User, ChatLineRound } from '@element-plus/icons-vue'
 import { getBlogByid } from "@/api/modules/blog";
-
-// import { Comment } from "@/api/interface/index";
+import { getCommentbyId } from "@/api/modules/comment";
+import { commenttype } from "@/api/interface/index";
 import { FrstCommentCreate } from "@/api/modules/comment";
 
 const route = useRoute()
 let data = ref<any>({})
-let queryInfo = reactive({ id: route.query.id as string });
+let queryInfo = reactive({ page: 1, size: 5, blog_id: route.query.id as string });
+let commentdata = ref({})
 const getData = async () => {
-  console.log(queryInfo, "info");
-  let result = await getBlogByid(queryInfo)
+  let result = await getBlogByid({ id: route.query.id as string })
   data.value = result.data
-  console.log(data, "data");
-
+  getCommetData()
+}
+const getCommetData = async () => {
+  let commentresult = await getCommentbyId(queryInfo)
+  commentdata.value = commentresult.data
 }
 
 onMounted(() => {
-
   getData()
+
 })
 let QQnumber = ref("")
 let firstcomment = ref("")
+let nickname = ref("")
 const SendFirstComment = async () => {
   if (QQnumber.value == "") {
     ElMessage.error("请填写qq号");
@@ -91,16 +94,22 @@ const SendFirstComment = async () => {
     ElMessage.error("请填写内容!")
     return
   }
+  else if (nickname.value == '') {
+    ElMessage.error("请填写昵称!")
+    return
+  }
   let data = {
     user_id: Number(QQnumber.value),
     content: firstcomment.value,
+    nickname: nickname.value,
     blog_id: route.query.id as string
   }
   let result = await FrstCommentCreate(data)
   if (result.status == 200) {
     ElMessage.success(result.message)
-    QQnumber.value = "",
-      firstcomment.value = ""
+    QQnumber.value = "";
+    firstcomment.value = "";
+    nickname.value = "";
   }
 
 }

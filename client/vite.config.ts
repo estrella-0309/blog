@@ -35,6 +35,12 @@ export default defineConfig({
         // target: "https://www.fastmock.site/mock/f81e8333c1a9276214bcdbc170d9e0a0", // fastmock
         changeOrigin: true,
         // rewrite: path => path.replace(/^\/api/, "")
+      },
+      '/qq': {// 匹配所有以 '/api2'开头的请求路径
+        target: 'https://users.qzone.qq.com',// 代理目标的基础路径
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/qq/, "")
+        // pathRewrite: { '^/qq': '' }
       }
     }
   },
@@ -86,5 +92,5 @@ export default defineConfig({
     }),
     Inspect(),
   ],
- 
+
 })
