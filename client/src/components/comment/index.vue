@@ -35,6 +35,7 @@
         </el-card>
       </div>
     </div>
+   
     <el-dialog v-model="sceondDialogVisible" :title="`回复@${sceondcommentform.parent_nickname}`" width="30%"
       @close="resetsceondcomment()">
       <el-form ref="ruleFormRef" :model="sceondcommentform" :rules="rules">

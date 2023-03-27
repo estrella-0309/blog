@@ -4,7 +4,8 @@ import { ResultData } from "@/api/interface";
 import { ResultEnum } from "@/api/enums";
 import router from "@/router";
 import { checkStatus } from "@/api/utils/checkStatus";
-
+import NProgress from 'nprogress' 
+import 'nprogress/nprogress.css'
 const config = {
   baseURL: "api",
   timeout: ResultEnum.TIMEOUT as number,
@@ -24,6 +25,7 @@ class RequestHttp {
       (config: InternalAxiosRequestConfig) => {
         // * 如果当前请求不需要显示 loading,在 api 服务中通过指定的第三个参数: { headers: { noLoading: true } }来控制不显示loading，参见loginApi
         config.headers!.noLoading || showFullScreenLoading()
+        NProgress.start()
         return config;
       },
       (error: AxiosError) => {
@@ -33,6 +35,7 @@ class RequestHttp {
 
     this.service.interceptors.response.use(
       (response: AxiosResponse) => {
+        NProgress.done()
         const { data } = response;
         // * 在请求结束后，并关闭请求 loading
         tryHideFullScreenLoading();

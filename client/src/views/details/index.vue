@@ -49,6 +49,10 @@
           </el-card>
         </div>
         <Comment :data="commentdata" @updatecomment="getCommetData" />
+         <el-pagination style="margin-top: 20px;" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+    			:current-page="queryInfo.page" :page-sizes="[10, 20, 30, 50]" :page-size="queryInfo.size" :total="total"
+    			layout="total, sizes, prev, pager, next, jumper" background>
+    		</el-pagination>
       </div>
     </main>
   </el-card>
@@ -66,8 +70,9 @@ import { FrstCommentCreate } from "@/api/modules/comment";
 
 const route = useRoute()
 let data = ref<any>({})
+let total=ref(0)
 let queryInfo = reactive({ page: 1, size: 5, blog_id: route.query.id as string });
-let commentdata = ref({})
+let commentdata = ref<any>({})
 const getData = async () => {
   let result = await getBlogByid({ id: route.query.id as string })
   data.value = result.data
@@ -76,7 +81,16 @@ const getData = async () => {
 const getCommetData = async () => {
   let commentresult = await getCommentbyId(queryInfo)
   commentdata.value = commentresult.data
+  total.value= Number(commentdata.value.total)
 }
+const handleSizeChange = (newSize: number) => {
+  queryInfo.size = newSize
+  getData()
+};
+const handleCurrentChange = (newPage: number) => {
+  queryInfo.page = newPage
+  getData()
+};
 
 onMounted(() => {
   getData()

@@ -55,11 +55,11 @@ exports.QueryBlogByid = async (req, res) => {
     page = Number(page)
     size = Number(size)
     let result = {};
-    let totalresult = await db.query("SELECT COUNT(*) as count FROM comment where blog_id=?", blog_id)
+    let totalresult = await db.query("SELECT COUNT(*) as count FROM comment where blog_id=? and isNull(parent_id)", blog_id)
     result.total = totalresult[0].count
     let commentresult = await db.query("SELECT * FROM comment where blog_id=? and isNull(parent_id) limit ?,? ", [blog_id, (page - 1) * size, size])
     for(let item of commentresult){
-      let secondcommentresult=await db.query("select * from comment where parent_id=?",item.comment_id)
+      let secondcommentresult = await db.query("select * from comment where parent_id=? ",item.comment_id)
       item.secondlist = secondcommentresult
     }
     result.list = commentresult
