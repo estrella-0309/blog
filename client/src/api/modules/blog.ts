@@ -18,3 +18,7 @@ export const getBlogByid = (params: {id:string}) => {
 export const getTagNums = () => {
   return http.get<Tags.ResTagNumslist[]>(`/blog/tag/num`);
 };
+export const getBlogbyTime = () => {
+  return http.get<any>(`/blog/timeline`);
+};
+

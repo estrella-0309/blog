@@ -36,9 +36,8 @@ exports.QueryBlogByid = async (req, res) => {
   let blog_id = Number(id)
   try {
     let result = await db.query("select * from blog where blog_id= ?", blog_id)
-    
-    
     let categoryresult = await db.query("select * from category  where category_id= ? ", result[0].category_id)
+    console.log(categoryresult);
     result[0].category_id = categoryresult.name
     let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", result[0].tag)
     result[0].tag = taglist
@@ -54,27 +53,32 @@ exports.QueryBlogByid = async (req, res) => {
 }
 exports.QueryAllBlogBytime = async (req, res) => {
   try {
-    let result = await db.query("select * from blog where status = 1 ;")
+    let result = await db.query("select blog_id,title,createtime from blog where status = 0;")
+    let totalresult = await db.query("SELECT COUNT(*) as count FROM blog")
+
     result.sort((a, b) => parseInt(b.createtime) - parseInt(a.createtime));
-    const blogByMonth = {};
+    const blogByMonth = {}; 
+    blogByMonth.total = totalresult[0].count
+    blogByMonth.list={}
     result.forEach(blog => {
       const date = new Date(parseInt(blog.createtime));
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
-
-      if (!blogByMonth[year]) {
-        blogByMonth[year] = {};
+      const day=date.getDate()
+      let ym=year+"年"+month+'日'
+      console.log(ym);
+      if (!blogByMonth.list[ym]) {
+        blogByMonth.list[ym] = [];
       }
-      if (!blogByMonth[year][month]) {
-        blogByMonth[year][month] = [];
-      }
-      blogByMonth[year][month].push(blog);
+      console.log(blogByMonth);
+      
+      blogByMonth.list[ym].push(blog);
     });
     if (result.length == 0) {
       res.cc('id错误', 400)
     }
     else {
-      res.cc(blogByMonth, 200)
+      res.cc('获取成功', 200, blogByMonth)
     }
   } catch (error) {
     res.cc(error, 400)

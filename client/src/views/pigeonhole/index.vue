@@ -3,16 +3,16 @@
     <template #header>
       <div class="card-header" style="text-align: center;">
         <h2 style="font-weight: 500;">文章归档</h2>
-        <p style="font-size: 14px;margin-top: 5px;">目前共计2篇文章</p>
+        <p style="font-size: 14px;margin-top: 5px;">目前共计{{ data.total }}篇文章</p>
       </div>
     </template>
-    <div class="timeline">
-      <div :class="colorObj[index % 5].class" v-for="(i, index) in 7" :key="index">
-        <el-button :type="colorObj[index % 5].type">2023年9月</el-button>
-        <div class="item" v-for="i in 3" :key="i">
-          <div class="date">3月</div>
+    <div class="timeline" v-if="(JSON.stringify(data.list) != '{}')">
+      <div :class="colorObj[index % 5].class" v-for="(value, key, index) in data.list" :key="key">
+        <el-button :type="colorObj[index % 5].type">{{ key }} </el-button>
+        <div class="item" v-for="item in value" :key="item.blog_id">
+          <div class="date">{{ TimeToDate(item.createtime) }}日</div>
           <div class="wrap">
-            <el-button :type="colorObj[index % 5].type" class="tag" style=" margin:auto 30px;">2023年9月</el-button>
+            <el-button :type="colorObj[index % 5].type" class="tag" style=" margin:auto 30px;">{{ item.title }}</el-button>
           </div>
         </div>
       </div>
@@ -23,23 +23,35 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+import { getBlogbyTime } from "@/api/modules/blog";
+import { timestampToTime, TimeToDate } from "@/utils/time";
+type buttontype = "default" | "primary" | "success" | "info" | "warning" | "danger" | "text";
 let colorObj = [{
   class: 'el-button--primary',
-  type: 'primary' as "default" | "primary" | "success" | "info" | "warning" | "danger" | "text",
+  type: 'primary' as buttontype
 }, {
   class: 'el-button--success',
-  type: 'success' as "default" | "primary" | "success" | "info" | "warning" | "danger" | "text",
+  type: 'success' as buttontype
 }, {
   class: 'el-button--info',
-  type: 'info' as "default" | "primary" | "success" | "info" | "warning" | "danger" | "text",
+  type: 'info' as buttontype
 }, {
   class: 'el-button--warning',
-  type: 'warning' as "default" | "primary" | "success" | "info" | "warning" | "danger" | "text",
+  type: 'warning' as buttontype
 }, {
   class: 'el-button--danger',
-  type: 'danger' as "default" | "primary" | "success" | "info" | "warning" | "danger" | "text",
-}];
+  type: 'danger' as buttontype
+}]
+let data = ref<any>([])
+const getData = async () => {
+  let result = await getBlogbyTime()
+  console.log(result, "?");
+  data.value = result.data
+}
+onMounted(() => {
+  getData()
+})
 </script>
 
 <style lang="scss" scoped>

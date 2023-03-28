@@ -1,4 +1,4 @@
-export function timestampToTime(timestamp:string, number=0) {
+export function timestampToTime(timestamp:string|number, number=0) {
   var date = new Date(Number(timestamp))
 
   //时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -10,4 +10,10 @@ export function timestampToTime(timestamp:string, number=0) {
     return res.substring(0, number)
   }
   return res
+}
+
+export function TimeToDate(tiemstamp:string|number) {
+  var date = new Date(Number(tiemstamp))
+  var D = date.getDate() + ' '
+  return D
 }
