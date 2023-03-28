@@ -40,5 +40,11 @@ import { reactive, ref, onMounted } from 'vue'
 
   .main {
     width: 100%;
+    margin-left: 0;
+    .list{
+      font-size: 13px;
+      margin-left: 0;
+      width: 100%;
+    }
   }
 }</style>

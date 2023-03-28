@@ -16,14 +16,20 @@
         <!-- <i class="iconfont icon-icon" style="margin-left: var(--mb-0-5);font-size: 18px;"></i> -->
       </div>
     </div>
-    <div class="second"  v-if="first.secondlist.length!==0">
+    <div class="second" v-if="first.secondlist.length !== 0">
       <div v-for="second in first.secondlist" :key="second.comment_id">
         <el-card shadow="never" style="width: 80%; margin: var(--mb-1);">
           <div style=" display: flex;align-items: flex-end;">
             <el-avatar :src="`http://q2.qlogo.cn/headimg_dl?dst_uin=${second.user_id}&spec=1`" />
             <div class="information" style="padding-left: 5px;">
-              <div class="content"><span>{{second.nikename}}<span style="font-size: 14px;">@{{ second.parent_nickname }}</span> </span>:{{second.content}}</div>
-              <div class="createtime">{{ timestampToTime(second.createtime)}}</div>
+              <div class="content" style="font-size: 14px;">
+                <span>
+                  {{ second.nikename }} 
+                  <span class="createtime">{{ timestampToTime(second.createtime) }}</span>
+                  <div>@{{ second.parent_nickname }}:{{ second.content }}</div>
+                </span>
+              </div>
+
             </div>
             <div class="box" style="margin-left: auto;margin-right: var(--mb-1);">
               <el-icon style="transform: translateY(3px);" @click="SecondcommentShow(second.nikename, first.comment_id)">
@@ -35,7 +41,7 @@
         </el-card>
       </div>
     </div>
-   
+
     <el-dialog v-model="sceondDialogVisible" :title="`回复@${sceondcommentform.parent_nickname}`" width="30%"
       @close="resetsceondcomment()">
       <el-form ref="ruleFormRef" :model="sceondcommentform" :rules="rules">
@@ -73,7 +79,7 @@ import { SecondCommentCreate } from "@/api/modules/comment";
 import type { FormInstance, FormRules } from 'element-plus'
 import { useRoute } from "vue-router";
 const route = useRoute()
-const emit=defineEmits(["updatecomment"])
+const emit = defineEmits(["updatecomment"])
 const props = defineProps({
   data: Object
 })
@@ -109,9 +115,9 @@ const resetsceondcomment = () => {
   sceondDialogVisible.value = false
   sceondcommentform.parent_nickname = ""
   sceondcommentform.parent_id = null
-  sceondcommentform.user_id=null
-  sceondcommentform.content=""
-  sceondcommentform.nikename=""
+  sceondcommentform.user_id = null
+  sceondcommentform.content = ""
+  sceondcommentform.nikename = ""
 }
 const sceondcommentcreate = async (formEl: FormInstance | undefined) => {
   let result = await SecondCommentCreate(sceondcommentform)
@@ -136,8 +142,10 @@ const sceondcommentcreate = async (formEl: FormInstance | undefined) => {
   }
 
   .content {
+    width: 100%;
     span {
       font-weight: 600;
+      
     }
   }
 
