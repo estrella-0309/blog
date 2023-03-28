@@ -7,7 +7,7 @@
       </div>
     </template>
     <div class="timeline" v-if="(JSON.stringify(data.list) != '{}')">
-      <div :class="colorObj[index % 5].class" v-for="(value, key, index) in data.list" :key="key">
+      <div  :class="colorObj[index % 5].class" v-for="(value, key, index) in data.list" :key="key">
         <el-button :type="colorObj[index % 5].type">{{ key }} </el-button>
         <div class="item" v-for="item in value" :key="item.blog_id">
           <div class="date">{{ TimeToDate(item.createtime) }}日</div>
@@ -43,10 +43,9 @@ let colorObj = [{
   class: 'el-button--danger',
   type: 'danger' as buttontype
 }]
-let data = ref<any>([])
+let data = ref<{list:Object,total:number}>({list:{},total:0})
 const getData = async () => {
   let result = await getBlogbyTime()
-  console.log(result, "?");
   data.value = result.data
 }
 onMounted(() => {
