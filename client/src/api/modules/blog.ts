@@ -15,6 +15,10 @@ export const getBlogByid = (params: {id:string}) => {
   return http.get<any>(`/blog/one`, params);
 };
 
+export const getSearchBlogList = (params: { searchstr: string }) => {
+  return http.get<blog.searchlist[]>(`/blog/search`, params);
+};
+
 export const getTagNums = () => {
   return http.get<Tags.ResTagNumslist[]>(`/blog/tag/num`);
 };

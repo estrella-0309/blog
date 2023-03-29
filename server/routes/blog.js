@@ -11,6 +11,7 @@ router.get("/tag/all", blogController.QueryBlogtagAll);
 router.get("/timeline", blogController.QueryAllBlogBytime);
 router.get("/view", blogController.QueryBlogByview);
 router.get("/tag/num", blogController.QueryBlogTagnNums);
+router.get("/search", blogController.QuerySearchBlog);
 
 router.get("/tag", blogController.QueryBlogBytag);
 router.put("/_token/update", blogController.update)

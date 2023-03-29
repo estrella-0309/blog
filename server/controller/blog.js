@@ -92,7 +92,7 @@ exports.QueryBlogAll = async (req, res) => {
   size = Number(size)
   let data = { page, size };
   try {
-    let result = await db.query("select * from blog  ORDER BY istop DESC limit ?,?;", [(page - 1) * size, size])
+    let result = await db.query("select * from blog  where status=0 ORDER BY istop DESC limit ?,?;", [(page - 1) * size, size])
     if (result.length == 0) {
       res.cc('没有数据', 400)
     }
@@ -196,12 +196,25 @@ exports.QueryBlogTagnNums = async (req, res) => {
   }
 }
 
+exports.QuerySearchBlog = async (req, res) => {
+  try {
+    let { searchstr } = req.query;
+    searchstr = '%' + searchstr + '%'
+    console.log(searchstr);
+    let result = await db.query("select  blog_id,title as value,createtime from blog where status = 0 and (content like ? or title like ?);", [searchstr, searchstr])
+    console.log(result);
+      res.cc('搜索成功', 200,result)
+  } catch (error) {
+    res.cc(error, 400)
+  }
+}
+
 exports.QueryBlogBytag = async (req, res) => {
   try {
     let { page, size, tag } = req.body;
     tag = '%' + tag + '%'
 
-    let result = await db.query("select * from blog where status = 1 and tag like ? limit ?,?;", [tag, (page - 1) * size, size])
+    let result = await db.query("select * from blog where status = 0 and tag like ? limit ?,?;", [tag, (page - 1) * size, size])
 
     if (result.length == 0) {
       res.cc('没有数据', 400)

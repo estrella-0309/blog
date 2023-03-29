@@ -12,7 +12,7 @@
                 <p>主页</p>
               </router-link>
             </li>
-            <el-dropdown trigger="click" style="height:100%;">
+            <el-dropdown trigger="click" class="category" style="height:100%;">
               <li class="nav__item">
                 <div class="nav__link" @click="closedropDown">
                   <i class="iconfont icon-fenlei"></i>
@@ -23,7 +23,8 @@
               </li>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-for="cate in catelist" style="width: 100px;display:flex; justify-content: center;"
+                  <el-dropdown-item v-for="cate in catelist"
+                    style="width: 100px;display:flex; justify-content: center; align-items: center;"
                     :key="cate.category_id" @click="Todetail(cate)">{{ cate.name }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -60,7 +61,8 @@
         <el-avatar :size="30" :src="circleUrl" />
         <div class="search" style="width:50%">
           <el-icon class="iconfont icon-sousuo" v-if="taggleSearchAndIcon" @click="ChangeIconToSearch()"></el-icon>
-          <el-autocomplete v-model="searchText" placeholder="搜索" ref="searchInput" @blur="ChangeSeachToIcon()" v-else>
+          <el-autocomplete v-model="searchText" :fetch-suggestions="querySearchAsync" @select="handleSelect"
+            placeholder="搜索" ref="searchInput" @blur="ChangeSeachToIcon()" v-else>
             <template #suffix>
               <i class="iconfont icon-sousuo"></i>
             </template>
@@ -77,7 +79,9 @@ import { reactive, ref, onMounted, nextTick } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { getCategoryList } from "@/api/modules/category";
-import { ResPage, CateGory, Result } from "@/api/interface/index";
+import { getSearchBlogList } from "@/api/modules/blog";
+
+import { blog, CateGory } from "@/api/interface/index";
 import { useRoute, useRouter } from 'vue-router'
 
 let circleUrl = "http://localhost:3030/upload/416271206461509.png"
@@ -105,21 +109,53 @@ const closedropDown = () => {
 //搜索模块
 const searchText = ref("");
 const taggleSearchAndIcon = ref(true)
+let searchresult = ref<blog.searchlist[]>([]);
 let searchInput = ref()
 const ChangeSeachToIcon = () => {
   taggleSearchAndIcon.value = true
 }
-
 const ChangeIconToSearch = () => {
   taggleSearchAndIcon.value = false
   nextTick(() => {
     searchInput.value.focus();
   })
 }
+let timer: NodeJS.Timeout
+const querySearchAsync = (queryString: string, callback: (arg: any) => void) => {
+  if (queryString == null
+    || queryString.trim() === ''
+    || queryString.indexOf('%') !== -1
+    || queryString.indexOf('_') !== -1
+    || queryString.indexOf('[') !== -1
+    || queryString.indexOf('#') !== -1
+    || queryString.indexOf('*') !== -1
+    || queryString.trim().length > 20) {
+    return
+  }
+  timer && clearTimeout(timer)
+  timer = setTimeout(async () => {
+    let result = await getSearchBlogList({ searchstr: queryString })
+    searchresult.value = result.data
+    console.log(searchresult.value);
+    callback(searchresult.value)
+  }, 1000);
+
+}
+const handleSelect = (item: any) => {
+  if (item?.blog_id) {
+    router.push({
+      path: '/details',
+      query: {
+        id: item.blog_id
+      }
+    })
+  }
+}
+
+//分类模块
 let catelist = reactive<CateGory.ResCateGoryList[]>([])
 const getData = async () => {
   let result = await getCategoryList({ page: 1, size: 100 })
-  console.log(result);
   catelist.push(...result.data.list)
 }
 
@@ -226,6 +262,7 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
   }
 
   .nav__link {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -305,6 +342,10 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
       height: 100%;
       width: 200px;
 
+      .category {
+        width: 100%;
+      }
+
       .nav__list {
         height: 100%;
         gap: 0;
@@ -314,7 +355,7 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
 
         .nav__item {
           height: 100%;
-          width: 100px;
+          width: 100%;
           margin: auto 0;
 
         }
@@ -322,7 +363,7 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
         .nav__link {
           height: 100%;
           display: flex;
-          justify-content: flex-end;
+          justify-content: center;
         }
       }
 
@@ -343,7 +384,7 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
   }
 }
 
-@media screen and (min-width: 1140px) {
+@media screen and (min-width: 1300px) {
   .nav {
     .nav__left {
       margin-left: var(--mb-10);
@@ -355,6 +396,10 @@ const Todetail = (item: CateGory.ResCateGoryList) => {
 
     .nav__menu {
       width: 600px;
+
+      .category {
+        width: 100px;
+      }
 
       .nav__item {
         width: 110px !important;

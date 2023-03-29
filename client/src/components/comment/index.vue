@@ -42,10 +42,10 @@
       </div>
     </div>
 
-    <el-dialog v-model="sceondDialogVisible" :title="`回复@${sceondcommentform.parent_nickname}`" width="30%"
+    <el-dialog v-model="sceondDialogVisible" :title="`回复@${sceondcommentform.parent_nickname}`" width="30%" style="min-width:300px;"
       @close="resetsceondcomment()">
       <el-form ref="ruleFormRef" :model="sceondcommentform" :rules="rules">
-        <el-form-item label="头像" prop="user_id">
+        <el-form-item label="qq号" prop="user_id">
           <el-input v-model="sceondcommentform.user_id" placeholder="请输入qq号"></el-input>
         </el-form-item>
 

@@ -115,6 +115,12 @@ export namespace blog {
     view: number,
     introduce: string
   }
+  export interface searchlist {
+    blog_id: number,
+    title: string,
+    createtime: string,
+  }
+
   export interface details {
     blog_id: number,
     category_id: string,
