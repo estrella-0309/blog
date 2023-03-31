@@ -108,12 +108,16 @@ const getData = async () => {
 const getDataByid = async (id: number) => {
 	let result = await getBlogById({ blog_id: id })
 	let data = result.data
+	console.log(data);
+
 	form.title = data.title;
 	form.content = data.content;
 	form.first_pic = data.first_pic;
 	form.introduce = data.introduce;
 	form.cate = data.category_id;
-	form.tagList = data.tag.split(",")
+	data.tag.map((item) => {
+		form.tagList.push(String(item.tag_id))
+	})
 }
 onMounted(() => {
 	if (route.query.id) {
@@ -127,8 +131,8 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 	response,
 	uploadFile
 ) => {
-	console.log(uploadFile, response,"pic");
-	form.first_pic =response.data.fileUrl
+	console.log(uploadFile, response, "pic");
+	form.first_pic = response.data.fileUrl
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {

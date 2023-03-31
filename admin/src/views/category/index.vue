@@ -77,6 +77,7 @@ const getData = async () => {
 	total.value = result.data.total;
 	categoryList.length = 0;
 	categoryList.push(...result.data.list);
+	total.value = Number(result.data.total)
 
 }
 

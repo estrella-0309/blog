@@ -75,7 +75,7 @@ export namespace Blog {
 		title:string,
 		content:string,
 		createtime:string,
-		tag:string,
+		tag:Array<Tags.ResTagsList>,
 		status:number,
 		istop: number,
 		first_pic:string,

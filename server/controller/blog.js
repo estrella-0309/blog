@@ -32,19 +32,20 @@ exports.Delete = async (req, res) => {
 }
 
 exports.QueryBlogByid = async (req, res) => {
-  let { id } = req.query;
-  let blog_id = Number(id)
+  let {  blog_id  } = req.query;
+  blog_id = Number(blog_id)
   try {
     let result = await db.query("select * from blog where blog_id= ?", blog_id)
     let categoryresult = await db.query("select * from category  where category_id= ? ", result[0].category_id)
-    console.log(categoryresult);
-    result[0].category_id = categoryresult.name
+    result[0].category_id = categoryresult[0].name
     let taglist = await db.query("select * from tag where find_in_set(tag_id,?) ", result[0].tag)
     result[0].tag = taglist
     if (result.length == 0) {
       res.cc('id错误', 400)
     }
     else {
+      console.log(result[0]);
+      
       res.cc('查询成功', 200, result[0])
     }
   } catch (error) {

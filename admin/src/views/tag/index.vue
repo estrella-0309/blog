@@ -90,7 +90,8 @@ let queryInfo = reactive({ page: 1, size: 10 });
 let total = ref(0);
 const getData = async () => {
 	let result = await getTagsList(queryInfo)
-	total.value = result.data.total;
+		total.value = Number(result.data.total)
+
 	addForm.color = addcolor[(total.value) % 5]
 	TagsList.length = 0;
 	TagsList.push(...result.data.list);

@@ -90,7 +90,7 @@ export function MenuList(): any {
         {
             "path": "/blog/comment",
             "name": "comment",
-            "component": "/assembly/guide/index",
+            "component": "/comment/index",
             "meta": {
                 "icon": "Tickets",
                 "title": "评论管理",
